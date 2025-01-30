@@ -1,0 +1,48 @@
+<!--
+* created by kasun weerasinghe
+* Date: 1/30/25
+* Time: 6:50 AM
+* Project Name: CarRentalSystem
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+</head>
+<body>
+
+<h1>Customer Dashboard</h1>
+<form id="logoutForm">
+    <button type="submit">Log Out</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#logoutForm").on("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            $.ajax({
+                url: "logout",
+                type: "GET",
+                success: function(response, status, xhr) {
+                    if (xhr.status === 200) {
+                        window.location.href = "index.html";
+                    } else {
+                        console.error("Logout request failed.");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Logout failed:", error);
+                }
+            });
+        });
+    });
+</script>
+
+
+</body>
+</html>
