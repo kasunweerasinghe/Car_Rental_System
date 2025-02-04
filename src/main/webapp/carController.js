@@ -5,32 +5,6 @@ $(document).ready(function () {
     document.getElementById("btnUpdate").disabled = true;
     document.getElementById("btnSave").disabled = false;
 
-    // Handle tab switching and showing content
-    $(".nav-link").click(function () {
-        $(".nav-link").removeClass("active");
-        $(this).addClass("active");
-
-        let selectedTab = $(this).attr("id");
-
-        if (selectedTab === "dashboard-tab") {
-            $("#content").show();
-            $("#cars-content").hide();
-            $("#drivers-content").hide();
-        } else if (selectedTab === "cars-tab") {
-            $("#content").hide();
-            $("#cars-content").show();
-            $("#drivers-content").hide();
-            generateCarID();
-        } else if (selectedTab === "drivers-tab") {
-            $("#content").hide();
-            $("#cars-content").hide();
-            $("#drivers-content").show();
-        }
-    });
-
-    // Trigger the dashboard tab by default
-    $("#dashboard-tab").click();
-
     loadCars();
 
     // save new car
