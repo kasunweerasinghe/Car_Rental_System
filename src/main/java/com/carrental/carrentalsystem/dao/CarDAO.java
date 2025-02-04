@@ -58,4 +58,16 @@ public class CarDAO {
         }
         return cars;
     }
+
+    public boolean deleteCar(int carId) {
+        String query = "DELETE FROM Car WHERE carId = ?";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, carId);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

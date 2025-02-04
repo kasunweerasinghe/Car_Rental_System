@@ -50,22 +50,28 @@
         <h2 class="text-center text-primary">Car Registration</h2>
         <form id="carForm">
             <div class="mb-3">
-                <label for="carBrand" class="form-label">Brand</label>
-                <input type="text" class="form-control" id="carBrand" required>
-            </div>
-            <div class="mb-3">
-                <label for="carModel" class="form-label">Model</label>
-                <input type="text" class="form-control" id="carModel" required>
-            </div>
-            <div class="mb-3">
-                <label for="carYear" class="form-label">Year</label>
-                <input type="number" class="form-control" id="carYear" min="1990" max="2030" required>
-            </div>
-            <div class="mb-3">
-                <label for="carPrice" class="form-label">Price (per day)</label>
-                <input type="number" class="form-control" id="carPrice" step="0.01" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Save Car</button>
+                <label for="carId" class="form-label">Car ID</label>
+                <input type="text" class="form-control" id="carId" disabled>
+                <div class="mb-3">
+                    <label for="carBrand" class="form-label">Brand</label>
+                    <input type="text" class="form-control" id="carBrand" required>
+                </div>
+                <div class="mb-3">
+                    <label for="carModel" class="form-label">Model</label>
+                    <input type="text" class="form-control" id="carModel" required>
+                </div>
+                <div class="mb-3">
+                    <label for="carYear" class="form-label">Year</label>
+                    <input type="number" class="form-control" id="carYear" min="1990" max="2030" required>
+                </div>
+                <div class="mb-3">
+                    <label for="carPrice" class="form-label">Price (per day)</label>
+                    <input type="number" class="form-control" id="carPrice" step="0.01" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="btnSave">Save Car</button>
+                <button type="button" class="btn btn-warning" id="btnUpdate">Update</button>
+                <button type="button" class="btn btn-danger" id="btnDelete">Delete</button>
+                <button type="button" class="btn btn-info" id="btnClear">Clear All</button>
         </form>
     </div>
 
@@ -76,11 +82,11 @@
         <table class="table table-striped table-hover">
             <thead class="table-dark">
             <tr>
+                <th>Car ID</th>
                 <th>Brand</th>
                 <th>Model</th>
                 <th>Year</th>
                 <th>Price</th>
-                <th>Action</th>
             </tr>
             </thead>
             <tbody id="carList">
@@ -125,7 +131,9 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
 <script>
+
     $(document).ready(function () {
         // Handle tab switching and showing content
         $(".nav-link").click(function () {
@@ -181,55 +189,106 @@
             });
         });
 
+        //update selected car details
+        $("#btnUpdate").click(function () {
+            let brand = $("#carBrand").val();
+            let model = $("#carModel").val();
+            let year = $("#carYear").val();
+            let price = $("#carPrice").val();
+
+            var car = {
+                brand: brand,
+                model: model,
+                year: year,
+                price: price
+            }
+
+            $.ajax({
+                url: "car",
+                method: 'put',
+                contentType: "application/json",
+                data: JSON.stringify(car),
+                dataType: "json",
+                success: function (res) {
+                    alert(res.message);
+                    loadCars();
+                },
+                error: function (error) {
+                    let cause = JSON.parse(error.responseText).message;
+                    alert(cause);
+                }
+
+            });
+        });
+
+        //delete selected car
+        $("#btnDelete").click(function () {
+            let id = $("#carId").val();
+            $.ajax({
+                url: "car?id=" + id + "",
+                method: "delete",
+                dataType:"json",
+                success: function (resp) {
+                    alert(resp.message);
+                    loadCars();
+                },
+                error:function (error){
+                    alert(JSON.parse(error.responseText).message);
+                }
+            });
+        });
+
+        //clear text fields when clear button is clicked
+        $("#btnClear").click(function () {
+            setTextFieldValues("","", "", "", "");
+        });
+
         // Load cars on page load
         function loadCars() {
+            $("#carList").empty();
             $.ajax({
                 url: "car",
                 type: "GET",
                 dataType: "json",
-                success: function (cars) {
-                    let carList = $("#carList");
-                    carList.empty();
-
-                    cars.forEach(function (car) {
-                        carList.append(`
-                    <tr id="row-${car.carId}">
-                        <td>${car.brand}</td>
-                        <td>${car.model}</td>
-                        <td>${car.year}</td>
-                        <td>${car.price}</td>
-                        <td>
-                            <button class="btn btn-warning btn-sm edit-btn" data-id="${car.carId}">Edit</button>
-                            <button class="btn btn-danger btn-sm delete-btn" data-id="${car.carId}">Delete</button>
-                        </td>
-                    </tr>
-                `);
-                    });
-
+                success: function (resp) {
+                    console.log(resp)
+                    for (let car of resp) {
+                        var row = '<tr><td>' + car.carId + '</td><td>' + car.brand + '</td><td>' + car.model +
+                            '</td><td>' + car.year + '</td><td>' + car.price + '</td></tr>';
+                        $("#carList").append(row);
+                    }
                     bindRowClickEvents();
-                },
-                error: function (xhr, status, error) {
-                    console.error("AJAX Error:", error);
+                    setTextFieldValues("", "", "", "");
                 }
             });
         }
 
+        // Bind row click events
         function bindRowClickEvents() {
             $("#carList>tr").click(function () {
-                let brand = $(this).children(":eq(0)").text();
-                let model = $(this).children(":eq(1)").text();
-                let year = $(this).children(":eq(2)").text();
-                let price = $(this).children(":eq(3)").text();
-
-                console.log(brand, model, year, price);
+                let carId = $(this).children(":eq(0)").text();
+                let brand = $(this).children(":eq(1)").text();
+                let model = $(this).children(":eq(2)").text();
+                let year = $(this).children(":eq(3)").text();
+                let price = $(this).children(":eq(4)").text();
 
                 //setting table details values to text fields
+                $('#carId').val(carId);
                 $('#carBrand').val(brand);
                 $('#carModel').val(model);
                 $('#carYear').val(year);
                 $('#carPrice').val(price);
 
             });
+        }
+
+        //set values for text fields
+        function setTextFieldValues(carId, brand, model, year, price) {
+            $("#carId").val(carId);
+            $("#carBrand").val(brand);
+            $("#carModel").val(model);
+            $("#carYear").val(year);
+            $("#carPrice").val(price);
         }
 
     });

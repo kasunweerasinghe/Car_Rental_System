@@ -10,6 +10,7 @@ package com.carrental.carrentalsystem.controller;
 import com.carrental.carrentalsystem.dao.CarDAO;
 import com.carrental.carrentalsystem.model.Car;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,7 +18,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.io.PrintWriter;
+import java.sql.SQLException;
+
 
 @WebServlet("/car")
 public class CarServlet extends HttpServlet {
@@ -45,6 +48,35 @@ public class CarServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(new Gson().toJson(carDAO.getAllCars()));
+
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        String idParam = request.getParameter("id");
+        JsonObject jsonResponse = new JsonObject();
+
+        if (idParam == null || idParam.isEmpty()) {
+            jsonResponse.addProperty("message", "Car ID is required");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.print(jsonResponse);
+            return;
+        }
+
+        int carId = Integer.parseInt(idParam);
+        boolean isDeleted = carDAO.deleteCar(carId);
+
+        if (isDeleted) {
+            jsonResponse.addProperty("message", "Car deleted successfully");
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            jsonResponse.addProperty("message", "Car not found or could not be deleted");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+
+        out.print(jsonResponse);
 
     }
 }
