@@ -45,8 +45,8 @@
 </div>
 
 <!-- Car Registration and List -->
-<div id="cars-content" class="mt-4" style="display: none;">
-    <div class="card shadow p-4">
+<div id="cars-content" class="mt-4" style="display: flex;">
+    <div class="card shadow p-3 col-4">
         <h2 class="text-center text-primary">Car Registration</h2>
         <form id="carForm">
             <div class="mb-3">
@@ -72,12 +72,11 @@
                 <button type="button" class="btn btn-warning" id="btnUpdate">Update</button>
                 <button type="button" class="btn btn-danger" id="btnDelete">Delete</button>
                 <button type="button" class="btn btn-info" id="btnClear">Clear All</button>
+            </div>
         </form>
     </div>
 
-    <hr>
-
-    <div class="card shadow p-4 mt-4">
+    <div class="card shadow p-3 col-8" style="margin-left: 4px">
         <h2 class="text-center text-success">Car List</h2>
         <table class="table table-striped table-hover">
             <thead class="table-dark">
@@ -96,8 +95,8 @@
 </div>
 
 <!-- Drivers Management -->
-<div id="drivers-content" class="mt-4" style="display: none;">
-    <div class="card shadow p-4">
+<div id="drivers-content" class="mt-4" style="display: flex;">
+    <div class="card shadow p-4 col-4">
         <h2 class="text-center text-primary">Driver Registration</h2>
         <form id="driverForm">
             <div class="mb-3">
@@ -112,9 +111,7 @@
         </form>
     </div>
 
-    <hr>
-
-    <div class="card shadow p-4 mt-4">
+    <div class="card shadow p-4 col-8" style="margin-left: 4px">
         <h2 class="text-center text-success">Driver List</h2>
         <table class="table table-striped table-hover">
             <thead class="table-dark">
@@ -135,6 +132,7 @@
 <script>
 
     $(document).ready(function () {
+        let cars = [];
 
         document.getElementById("btnDelete").disabled = true;
         document.getElementById("btnUpdate").disabled = true;
@@ -155,6 +153,7 @@
                 $("#content").hide();
                 $("#cars-content").show();
                 $("#drivers-content").hide();
+                generateCarID();
             } else if (selectedTab === "drivers-tab") {
                 $("#content").hide();
                 $("#cars-content").hide();
@@ -171,25 +170,43 @@
         $("#carForm").submit(function (event) {
             event.preventDefault();
 
-            let brand = $("#carBrand").val();
-            let model = $("#carModel").val();
-            let year = $("#carYear").val();
-            let price = $("#carPrice").val();
-
             $.ajax({
                 url: "car",
                 type: "POST",
-                data: {brand: brand, model: model, year: year, price: price},
+                data: {
+                    carId: $("#carId").val(),
+                    brand: $("#carBrand").val(),
+                    model: $("#carModel").val(),
+                    year: $("#carYear").val(),
+                    price: $("#carPrice").val()
+                },
                 success: function (response) {
-                    if (response === "success") {
-                        alert("Car added successfully!");
-                        loadCars(); // Refresh the car list
+                    if (response.trim() === "success") {
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: "Car added successfully!",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            loadCars();
+                            generateCarID();
+                            $("#carForm")[0].reset();
+                        });
                     } else {
-                        alert("Failed to add car.");
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Failed to add car! Server response: " + response
+                        });
                     }
                 },
-                error: function () {
-                    alert("An error occurred while adding the car.");
+                error: function (xhr) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error!",
+                        text: "An error occurred while adding the car. Server response: " + xhr.responseText
+                    });
                 }
             });
         });
@@ -242,7 +259,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         url: "car?id=" + id,
-                        method: "delete",
+                        method: "DELETE",
                         dataType: "json",
                         success: function (resp) {
                             Swal.fire("Deleted!", resp.message, "success").then(() => {
@@ -253,19 +270,29 @@
                             });
                         },
                         error: function (error) {
-                            Swal.fire("Error!", JSON.parse(error.responseText).message, "error");
+                            try {
+                                let responseJSON = JSON.parse(error.responseText);
+                                Swal.fire("Error!", responseJSON.message, "error");
+                            } catch (e) {
+                                Swal.fire("Error!", "Unexpected server response", "error");
+                            }
                         }
+
                     });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    setTextFieldValues();
+                    generateCarID();
                 }
             });
         });
 
         //clear text fields when clear button is clicked
         $("#btnClear").click(function () {
-            setTextFieldValues("","", "", "", "");
+            setTextFieldValues("", "", "", "", "");
             document.getElementById("btnDelete").disabled = true;
             document.getElementById("btnUpdate").disabled = true;
             document.getElementById("btnSave").disabled = false;
+            generateCarID();
         });
 
         // Load cars on page load
@@ -276,15 +303,34 @@
                 type: "GET",
                 dataType: "json",
                 success: function (resp) {
-                    for (let car of resp) {
-                        var row = '<tr><td>' + car.carId + '</td><td>' + car.brand + '</td><td>' + car.model +
-                            '</td><td>' + car.year + '</td><td>' + car.price + '</td></tr>';
+                    cars = resp;
+                    for (let car of cars) {
+                        var row = `<tr><td>${car.carId}</td><td>${car.brand}</td><td>${car.model}</td>
+                           <td>${car.year}</td><td>${car.price}</td></tr>`;
                         $("#carList").append(row);
                     }
+
                     bindRowClickEvents();
                     setTextFieldValues("", "", "", "");
+                    generateCarID();
                 }
             });
+        }
+
+        // generate ID for cars
+        function generateCarID() {
+            try {
+                let lastCarId = cars.length > 0 ? cars[cars.length - 1].carId : "CAR-000";
+                let newCarId = parseInt(lastCarId.substring(4, 7)) + 1;
+
+                let formattedId = newCarId < 10 ? "CAR-00" + newCarId
+                    : newCarId < 100 ? "CAR-0" + newCarId
+                        : "CAR-" + newCarId;
+
+                $("#carId").val(formattedId);
+            } catch (e) {
+                $("#carId").val("CAR-001"); // If no cars exist
+            }
         }
 
         // Bind row click events
@@ -310,7 +356,7 @@
             });
         }
 
-        //set values for text fields
+        //set values for empty text fields
         function setTextFieldValues(carId, brand, model, year, price) {
             $("#carId").val(carId);
             $("#carBrand").val(brand);
@@ -318,7 +364,6 @@
             $("#carYear").val(year);
             $("#carPrice").val(price);
         }
-
 
     });
 </script>

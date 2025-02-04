@@ -21,14 +21,15 @@ public class CarDAO {
 
     // Add a new car to the database
     public boolean addCar(Car car) {
-        String query = "INSERT INTO Car (brand, model, year, price, isAvailable) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Car (carId, brand, model, year, price, isAvailable) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, car.getBrand());
-            preparedStatement.setString(2, car.getModel());
-            preparedStatement.setInt(3, car.getYear());
-            preparedStatement.setDouble(4, car.getPrice());
-            preparedStatement.setBoolean(5, car.isAvailable());
+            preparedStatement.setString(1, car.getCarId());
+            preparedStatement.setString(2, car.getBrand());
+            preparedStatement.setString(3, car.getModel());
+            preparedStatement.setInt(4, car.getYear());
+            preparedStatement.setDouble(5, car.getPrice());
+            preparedStatement.setBoolean(6, car.isAvailable());
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -45,7 +46,7 @@ public class CarDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Car car = new Car();
-                car.setCarId(resultSet.getInt("carId"));
+                car.setCarId(resultSet.getString("carId"));
                 car.setBrand(resultSet.getString("brand"));
                 car.setModel(resultSet.getString("model"));
                 car.setYear(resultSet.getInt("year"));
@@ -59,11 +60,11 @@ public class CarDAO {
         return cars;
     }
 
-    public boolean deleteCar(int carId) {
+    public boolean deleteCar(String carId) {
         String query = "DELETE FROM Car WHERE carId = ?";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, carId);
+            preparedStatement.setString(1, carId);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();

@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.List;
 
 
 @WebServlet("/car")
@@ -28,18 +29,24 @@ public class CarServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String brand = request.getParameter("brand");
-        String model = request.getParameter("model");
-        int year = Integer.parseInt(request.getParameter("year"));
-        double price = Double.parseDouble(request.getParameter("price"));
+        try {
+            String carId = request.getParameter("carId");
+            String brand = request.getParameter("brand");
+            String model = request.getParameter("model");
+            int year = Integer.parseInt(request.getParameter("year"));
+            double price = Double.parseDouble(request.getParameter("price"));
 
-        Car car = new Car(0, brand, model, year, price, true);
-        boolean isAdded = carDAO.addCar(car);
+            Car car = new Car(carId, brand, model, year, price, true);
+            boolean isAdded = carDAO.addCar(car);
 
-        if (isAdded) {
-            response.getWriter().write("success");
-        } else {
-            response.getWriter().write("error");
+            if (isAdded) {
+                response.getWriter().write("success");
+            } else {
+                response.getWriter().write("error");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.getWriter().write("error: " + e.getMessage());
         }
     }
 
@@ -55,18 +62,19 @@ public class CarServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
-        String idParam = request.getParameter("id");
         JsonObject jsonResponse = new JsonObject();
+
+        String idParam = request.getParameter("id");
 
         if (idParam == null || idParam.isEmpty()) {
             jsonResponse.addProperty("message", "Car ID is required");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             out.print(jsonResponse);
+            out.flush();
             return;
         }
 
-        int carId = Integer.parseInt(idParam);
-        boolean isDeleted = carDAO.deleteCar(carId);
+        boolean isDeleted = carDAO.deleteCar(idParam);
 
         if (isDeleted) {
             jsonResponse.addProperty("message", "Car deleted successfully");
@@ -77,6 +85,6 @@ public class CarServlet extends HttpServlet {
         }
 
         out.print(jsonResponse);
-
+        out.flush();
     }
 }

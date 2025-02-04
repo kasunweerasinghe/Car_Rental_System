@@ -8,7 +8,7 @@
 package com.carrental.carrentalsystem.model;
 
 public class Car {
-    private int carId;
+    private String carId;
     private String brand;
     private String model;
     private int year;
@@ -17,7 +17,7 @@ public class Car {
 
     public Car() {}
 
-    public Car(int carId, String brand, String model, int year, double price, boolean isAvailable) {
+    public Car(String carId, String brand, String model, int year, double price, boolean isAvailable) {
         this.carId = carId;
         this.brand = brand;
         this.model = model;
@@ -26,11 +26,11 @@ public class Car {
         this.isAvailable = isAvailable;
     }
 
-    public int getCarId() {
+    public String getCarId() {
         return carId;
     }
 
-    public void setCarId(int carId) {
+    public void setCarId(String carId) {
         this.carId = carId;
     }
 
