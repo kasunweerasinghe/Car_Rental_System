@@ -16,15 +16,15 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 
-@WebServlet("/logout")  // Ensure this is correct
+@WebServlet("/logout")
 public class LogoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session != null) {
-            session.invalidate();
-            System.out.println("User logged out successfully.");
+            session.invalidate(); // End session
         }
-        response.sendRedirect(request.getContextPath() + "/index.html");  // Redirect to index.html
+        response.sendRedirect(request.getContextPath() + "/index.html"); // Redirect user
     }
 }
+
 
