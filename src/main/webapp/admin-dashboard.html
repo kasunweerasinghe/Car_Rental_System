@@ -131,10 +131,15 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="assets/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 
     $(document).ready(function () {
+
+        document.getElementById("btnDelete").disabled = true;
+        document.getElementById("btnUpdate").disabled = true;
+        document.getElementById("btnSave").disabled = false;
+
         // Handle tab switching and showing content
         $(".nav-link").click(function () {
             $(".nav-link").removeClass("active");
@@ -162,7 +167,7 @@
 
         loadCars();
 
-        // Handle car form submission
+        // save new car
         $("#carForm").submit(function (event) {
             event.preventDefault();
 
@@ -224,16 +229,33 @@
         //delete selected car
         $("#btnDelete").click(function () {
             let id = $("#carId").val();
-            $.ajax({
-                url: "car?id=" + id + "",
-                method: "delete",
-                dataType:"json",
-                success: function (resp) {
-                    alert(resp.message);
-                    loadCars();
-                },
-                error:function (error){
-                    alert(JSON.parse(error.responseText).message);
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to undo this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "car?id=" + id,
+                        method: "delete",
+                        dataType: "json",
+                        success: function (resp) {
+                            Swal.fire("Deleted!", resp.message, "success").then(() => {
+                                loadCars();
+                                document.getElementById("btnDelete").disabled = true;
+                                document.getElementById("btnUpdate").disabled = true;
+                                document.getElementById("btnSave").disabled = false;
+                            });
+                        },
+                        error: function (error) {
+                            Swal.fire("Error!", JSON.parse(error.responseText).message, "error");
+                        }
+                    });
                 }
             });
         });
@@ -241,6 +263,9 @@
         //clear text fields when clear button is clicked
         $("#btnClear").click(function () {
             setTextFieldValues("","", "", "", "");
+            document.getElementById("btnDelete").disabled = true;
+            document.getElementById("btnUpdate").disabled = true;
+            document.getElementById("btnSave").disabled = false;
         });
 
         // Load cars on page load
@@ -251,7 +276,6 @@
                 type: "GET",
                 dataType: "json",
                 success: function (resp) {
-                    console.log(resp)
                     for (let car of resp) {
                         var row = '<tr><td>' + car.carId + '</td><td>' + car.brand + '</td><td>' + car.model +
                             '</td><td>' + car.year + '</td><td>' + car.price + '</td></tr>';
@@ -279,6 +303,10 @@
                 $('#carYear').val(year);
                 $('#carPrice').val(price);
 
+                document.getElementById("btnDelete").disabled = false;
+                document.getElementById("btnUpdate").disabled = false;
+                document.getElementById("btnSave").disabled = true;
+
             });
         }
 
@@ -290,6 +318,7 @@
             $("#carYear").val(year);
             $("#carPrice").val(price);
         }
+
 
     });
 </script>
