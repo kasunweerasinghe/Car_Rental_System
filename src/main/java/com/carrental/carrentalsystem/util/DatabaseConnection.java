@@ -5,7 +5,7 @@
  * Project Name: CarRentalSystem
  */
 
-package com.carrental.carrentalsystem.dao;
+package com.carrental.carrentalsystem.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

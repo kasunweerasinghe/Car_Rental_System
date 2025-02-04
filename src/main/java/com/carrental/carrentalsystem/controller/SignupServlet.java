@@ -7,7 +7,9 @@
 
 package com.carrental.carrentalsystem.controller;
 
-import com.carrental.carrentalsystem.dao.DatabaseConnection;
+import com.carrental.carrentalsystem.model.User;
+import com.carrental.carrentalsystem.service.UserService;
+import com.carrental.carrentalsystem.util.DatabaseConnection;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,30 +23,21 @@ import java.sql.SQLException;
 
 @WebServlet("/signup")
 public class SignupServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private UserService userService = new UserService();
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String email = request.getParameter("email");
-        String role = "CUSTOMER";
 
-        try (Connection connection = DatabaseConnection.getConnection()) {
-            String query = "INSERT INTO Customer (username, password, email, role) VALUES (?, ?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, password);
-            preparedStatement.setString(3, email);
-            preparedStatement.setString(4, role);
+        User newUser = new User(0, username, password, email, "customer");
 
-            int result = preparedStatement.executeUpdate();
+        boolean isRegistered = userService.registerUser(newUser);
 
-            if (result > 0) {
-                response.sendRedirect("index.html?success=true"); // Redirect to HTML version
-            } else {
-                response.sendRedirect("signup.html?error=Registration failed. Please try again.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            response.sendRedirect("signup.html?error=Database error. Please try again later.");
+        if (isRegistered) {
+            response.sendRedirect("index.html");
+        } else {
+            response.getWriter().write("error"); // Notify frontend for failure
         }
     }
 }

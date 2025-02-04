@@ -6,7 +6,7 @@
  */
 
 
-import com.carrental.carrentalsystem.dao.DatabaseConnection;
+import com.carrental.carrentalsystem.util.DatabaseConnection;
 
 import java.sql.Connection;
 
