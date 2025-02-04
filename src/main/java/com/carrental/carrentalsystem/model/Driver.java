@@ -9,20 +9,22 @@ package com.carrental.carrentalsystem.model;
 
 public class Driver {
     private String driverId;
-    private String name;
-    private String address;
-    private int age;
-    private String nationalId;
+    private String driverName;
+    private String driverAddress;
+    private int driverAge;
+    private String driverNationalId;
+    private boolean isDriverAvailable;
 
     public Driver() {
     }
 
-    public Driver(String driverId, String name, String address, int age, String nationalId) {
+    public Driver(String driverId, String driverName, String driverAddress, int driverAge, String driverNationalId, boolean isDriverAvailable) {
         this.driverId = driverId;
-        this.name = name;
-        this.address = address;
-        this.age = age;
-        this.nationalId = nationalId;
+        this.driverName = driverName;
+        this.driverAddress = driverAddress;
+        this.driverAge = driverAge;
+        this.driverNationalId = driverNationalId;
+        this.isDriverAvailable = isDriverAvailable;
     }
 
     public String getDriverId() {
@@ -33,35 +35,43 @@ public class Driver {
         this.driverId = driverId;
     }
 
-    public String getName() {
-        return name;
+    public String getDriverName() {
+        return driverName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDriverName(String driverName) {
+        this.driverName = driverName;
     }
 
-    public String getAddress() {
-        return address;
+    public String getDriverAddress() {
+        return driverAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setDriverAddress(String driverAddress) {
+        this.driverAddress = driverAddress;
     }
 
-    public int getAge() {
-        return age;
+    public int getDriverAge() {
+        return driverAge;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setDriverAge(int driverAge) {
+        this.driverAge = driverAge;
     }
 
-    public String getNationalId() {
-        return nationalId;
+    public String getDriverNationalId() {
+        return driverNationalId;
     }
 
-    public void setNationalId(String nationalId) {
-        this.nationalId = nationalId;
+    public void setDriverNationalId(String driverNationalId) {
+        this.driverNationalId = driverNationalId;
+    }
+
+    public boolean isDriverAvailable() {
+        return isDriverAvailable;
+    }
+
+    public void setDriverAvailable(boolean driverAvailable) {
+        isDriverAvailable = driverAvailable;
     }
 }

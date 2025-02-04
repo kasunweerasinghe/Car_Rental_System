@@ -117,8 +117,8 @@
                 <input type="text" class="form-control" id="driverAge" required>
             </div>
             <div class="mb-3">
-                <label for="driverIdNo" class="form-label">ID Number</label>
-                <input type="text" class="form-control" id="driverIdNo" required>
+                <label for="driverNationalId" class="form-label">ID Number</label>
+                <input type="text" class="form-control" id="driverNationalId" required>
             </div>
             <button type="submit" class="btn btn-primary" id="btnDriverSave">Save Driver</button>
             <button type="button" class="btn btn-warning" id="btnDriverUpdate">Update</button>
@@ -188,6 +188,7 @@
                         $("#content").hide();
                         $("#cars-content").hide();
                         $("#drivers-content").show();
+                        generateDriverID();
                     }
                 });
 

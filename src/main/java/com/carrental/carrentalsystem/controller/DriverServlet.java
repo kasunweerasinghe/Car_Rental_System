@@ -1,0 +1,57 @@
+/**
+ * created by kasun weerasinghe
+ * Date: 2/4/25
+ * Time: 5:52 PM
+ * Project Name: CarRentalSystem
+ */
+
+package com.carrental.carrentalsystem.controller;
+
+import com.carrental.carrentalsystem.dao.CarDAO;
+import com.carrental.carrentalsystem.dao.DriverDAO;
+import com.carrental.carrentalsystem.model.Car;
+import com.carrental.carrentalsystem.model.Driver;
+import com.google.gson.Gson;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@WebServlet("/driver")
+public class DriverServlet extends HttpServlet {
+    private DriverDAO driverDAO = new DriverDAO();
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            String driverId = request.getParameter("driverId");
+            String name = request.getParameter("driverName");
+            String address = request.getParameter("driverAddress");
+            int age = Integer.parseInt(request.getParameter("driverAge"));
+            String nationalId = request.getParameter("driverNationalId");
+
+            Driver driver = new Driver(driverId, name, address, age, nationalId, true);
+            boolean isAdded = DriverDAO.addDriver(driver);
+
+            if (isAdded) {
+                response.getWriter().write("success");
+            } else {
+                response.getWriter().write("error");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.getWriter().write("error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(new Gson().toJson(driverDAO.getAllDrivers()));
+
+    }
+}
