@@ -8,7 +8,7 @@ $(document).ready(function () {
     loadDrivers();
 
     // save new driver
-    $("#driverForm").submit(function (event) {
+    $("#driverForm").submit(function () {
         event.preventDefault();
 
         $.ajax({
@@ -52,13 +52,60 @@ $(document).ready(function () {
         });
     });
 
+    $("#btnDriverUpdate").click(function () {
+
+    });
+
+    //delete selected driver
+    $("#btnDriverDelete").click(function () {
+        let id = $("#driverId").val();
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to undo this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "driver?id=" + id,
+                    method: "DELETE",
+                    dataType: "json",
+                    success: function (resp) {
+                        Swal.fire("Deleted!", resp.message, "success").then(() => {
+                            loadDrivers();
+                            document.getElementById("btnDriverDelete").disabled = true;
+                            document.getElementById("btnDriverUpdate").disabled = true;
+                            document.getElementById("btnDriverSave").disabled = false;
+                        });
+                    },
+                    error: function (error) {
+                        try {
+                            let responseJSON = JSON.parse(error.responseText);
+                            Swal.fire("Error!", responseJSON.message, "error");
+                        } catch (e) {
+                            Swal.fire("Error!", "Unexpected server response", "error");
+                        }
+                    }
+
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                setTextFieldValues();
+                generateDriverID();
+            }
+        });
+    });
+
     //clear text fields when clear button is clicked
     $("#btnDriverClear").click(function () {
         setTextFieldValues("", "", "", "", "");
         document.getElementById("btnDriverDelete").disabled = true;
         document.getElementById("btnDriverUpdate").disabled = true;
         document.getElementById("btnDriverSave").disabled = false;
-        generateCarID();
+        generateDriverID();
     });
 
     // Load drivers on page load
@@ -85,7 +132,6 @@ $(document).ready(function () {
 
     // generate ID for drivers
     function generateDriverID() {
-        console.log('call')
         try {
             let lastDriverId = drivers.length > 0 ? drivers[drivers.length - 1].driverId : "DID-000";
             let newDriverId = parseInt(lastDriverId.substring(4, 7)) + 1;

@@ -12,6 +12,7 @@ import com.carrental.carrentalsystem.dao.DriverDAO;
 import com.carrental.carrentalsystem.model.Car;
 import com.carrental.carrentalsystem.model.Driver;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet("/driver")
 public class DriverServlet extends HttpServlet {
@@ -53,5 +55,35 @@ public class DriverServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(new Gson().toJson(driverDAO.getAllDrivers()));
 
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        JsonObject jsonResponse = new JsonObject();
+
+        String idParam = request.getParameter("id");
+
+        if (idParam == null || idParam.isEmpty()) {
+            jsonResponse.addProperty("message", "Driver ID is required");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.print(jsonResponse);
+            out.flush();
+            return;
+        }
+
+        boolean isDeleted = driverDAO.deleteDriver(idParam);
+
+        if (isDeleted) {
+            jsonResponse.addProperty("message", "Driver deleted successfully");
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            jsonResponse.addProperty("message", "Driver not found or could not be deleted");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+
+        out.print(jsonResponse);
+        out.flush();
     }
 }

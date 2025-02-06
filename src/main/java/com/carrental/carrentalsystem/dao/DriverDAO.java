@@ -61,4 +61,18 @@ public class DriverDAO {
         }
         return drivers;
     }
+
+
+    // delete cars from the database
+    public boolean deleteDriver(String driverId) {
+        String query = "DELETE FROM Driver WHERE driverId = ?";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, driverId);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

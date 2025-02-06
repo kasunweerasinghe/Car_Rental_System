@@ -60,6 +60,7 @@ public class CarDAO {
         return cars;
     }
 
+    // delete cars from the database
     public boolean deleteCar(String carId) {
         String query = "DELETE FROM Car WHERE carId = ?";
         try (Connection connection = DatabaseConnection.getConnection();
