@@ -9,16 +9,21 @@ package com.carrental.carrentalsystem.controller;
 
 import com.carrental.carrentalsystem.dao.CarDAO;
 import com.carrental.carrentalsystem.model.Car;
+import com.carrental.carrentalsystem.util.DatabaseConnection;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -87,4 +92,49 @@ public class CarServlet extends HttpServlet {
         out.print(jsonResponse);
         out.flush();
     }
+
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+        JsonObject jsonResponse = new JsonObject();
+
+        // Read the JSON body
+        StringBuilder sb = new StringBuilder();
+        String line;
+        try (BufferedReader reader = request.getReader()) {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+        }
+
+        // Parse JSON body
+        Gson gson = new Gson();
+        Car car = gson.fromJson(sb.toString(), Car.class);
+
+        if (car.getCarId() == null || car.getCarId().isEmpty()) {
+            jsonResponse.addProperty("message", "Car ID is required");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.print(jsonResponse);
+            out.flush();
+            return;
+        }
+
+        boolean isUpdated = carDAO.updateCar(car);
+
+        if (isUpdated) {
+            jsonResponse.addProperty("message", "Car updated successfully");
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            jsonResponse.addProperty("message", "Car not found or could not be updated");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+
+        out.print(jsonResponse);
+        out.flush();
+    }
+
+
 }

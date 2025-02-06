@@ -72,4 +72,22 @@ public class CarDAO {
         }
         return false;
     }
+
+    public static boolean updateCar(Car car) {
+        String query = "UPDATE Car SET brand = ?, model = ?, year = ?, price = ? WHERE carId = ?";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, car.getBrand());
+            preparedStatement.setString(2, car.getModel());
+            preparedStatement.setInt(3, car.getYear());
+            preparedStatement.setDouble(4, car.getPrice());
+            preparedStatement.setString(5, car.getCarId());
+
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

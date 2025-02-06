@@ -52,26 +52,21 @@ $(document).ready(function () {
         });
     });
 
-    //update selected car details
+    //update selected car
     $("#btnUpdate").click(function () {
-        let brand = $("#carBrand").val();
-        let model = $("#carModel").val();
-        let year = $("#carYear").val();
-        let price = $("#carPrice").val();
-
-        var car = {
-            brand: brand,
-            model: model,
-            year: year,
-            price: price
-        }
+        let car = {
+            carId: $("#carId").val(),
+            brand: $("#carBrand").val(),
+            model: $("#carModel").val(),
+            year: $("#carYear").val(),
+            price: $("#carPrice").val()
+        };
 
         $.ajax({
             url: "car",
-            method: 'put',
-            contentType: "application/json",
+            method: "PUT",
             data: JSON.stringify(car),
-            dataType: "json",
+            contentType: "application/json",
             success: function (res) {
                 alert(res.message);
                 loadCars();
@@ -80,9 +75,9 @@ $(document).ready(function () {
                 let cause = JSON.parse(error.responseText).message;
                 alert(cause);
             }
-
         });
     });
+
 
     //delete selected car
     $("#btnDelete").click(function () {

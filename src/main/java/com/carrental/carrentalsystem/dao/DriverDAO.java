@@ -62,13 +62,30 @@ public class DriverDAO {
         return drivers;
     }
 
-
     // delete cars from the database
     public boolean deleteDriver(String driverId) {
         String query = "DELETE FROM Driver WHERE driverId = ?";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, driverId);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // update Driver
+    public static boolean updateDriver(Driver driver) {
+        String query = "UPDATE Driver SET driverName = ?, driverAddress = ?, driverAge = ?, driverNationalId = ? WHERE driverId = ?";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, driver.getDriverName());
+            preparedStatement.setString(2, driver.getDriverAddress());
+            preparedStatement.setInt(3, driver.getDriverAge());
+            preparedStatement.setString(4, driver.getDriverNationalId());
+            preparedStatement.setString(5, driver.getDriverId());
+
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();

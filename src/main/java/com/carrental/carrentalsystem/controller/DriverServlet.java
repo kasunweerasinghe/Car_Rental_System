@@ -19,6 +19,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -80,6 +81,48 @@ public class DriverServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
             jsonResponse.addProperty("message", "Driver not found or could not be deleted");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+
+        out.print(jsonResponse);
+        out.flush();
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+        JsonObject jsonResponse = new JsonObject();
+
+        // Read the JSON body
+        StringBuilder sb = new StringBuilder();
+        String line;
+        try (BufferedReader reader = request.getReader()) {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+        }
+
+        // Parse JSON body
+        Gson gson = new Gson();
+        Driver driver = gson.fromJson(sb.toString(), Driver.class);
+
+        if (driver.getDriverId() == null || driver.getDriverId().isEmpty()) {
+            jsonResponse.addProperty("message", "Driver ID is required");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.print(jsonResponse);
+            out.flush();
+            return;
+        }
+
+        boolean isUpdated = DriverDAO.updateDriver(driver);
+
+        if (isUpdated) {
+            jsonResponse.addProperty("message", "Driver updated successfully");
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            jsonResponse.addProperty("message", "Driver not found or could not be updated");
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
 

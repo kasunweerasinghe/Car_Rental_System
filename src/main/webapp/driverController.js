@@ -53,7 +53,28 @@ $(document).ready(function () {
     });
 
     $("#btnDriverUpdate").click(function () {
+        let driver = {
+            driverId: $("#driverId").val(),
+            driverName: $("#driverName").val(),
+            driverAddress: $("#driverAddress").val(),
+            driverAge: $("#driverAge").val(),
+            driverNationalId: $("#driverNationalId").val()
+        };
 
+        $.ajax({
+            url: "driver",
+            method: "PUT",
+            data: JSON.stringify(driver),
+            contentType: "application/json",
+            success: function (res) {
+                alert(res.message);
+                loadDrivers();
+            },
+            error: function (error) {
+                let cause = JSON.parse(error.responseText).message;
+                alert(cause);
+            }
+        });
     });
 
     //delete selected driver
