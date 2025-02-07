@@ -1,18 +1,3 @@
-// // Start Hide Other Sections When Webpage Load
-// $(document).ready(function () {
-//     $('#dashboard-content').show();
-//     $('#cars-content').hide();
-//     $('#drivers-content').hide();
-// });
-//
-// // Start When customer click other section hide
-// $('#cars-tab').click(function () {
-//     $('#dashboard-content').hide();
-//     $('#ars-content').show();
-//     $('#drivers-content').hide();
-//     // generateCarID();
-// });
-
 $(document).ready(function () {
     // Handle tab s witching and showing content
     $(".nav-link").click(function () {
