@@ -23,13 +23,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" id="dashboard-tab" href="#">Admin Dashboard</a>
+                    <a class="nav-link active" id="dashboard-tab">Admin Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="cars-tab" href="#">Cars</a>
+                    <a class="nav-link" id="cars-tab">Cars</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="drivers-tab" href="#">Drivers</a>
+                    <a class="nav-link" id="drivers-tab">Drivers</a>
                 </li>
             </ul>
         </div>
@@ -44,6 +44,60 @@
     <h1 class="text-center">Welcome to Admin Dashboard</h1>
     <p class="text-center">Select a menu option to manage cars or drivers.</p>
 </div>
+<!--<div id="content" class="mt-4">-->
+<!--    <h1 class="text-center">Welcome to Admin Dashboard</h1>-->
+<!--    <p class="text-center">Select a menu option to manage cars or drivers.</p>-->
+
+<!--    &lt;!&ndash; Summary Cards &ndash;&gt;-->
+<!--    <div class="d-flex justify-content-center gap-4">-->
+<!--        <div class="card text-white bg-primary p-3" style="width: 18rem;">-->
+<!--            <h4>Total Cars</h4>-->
+<!--            <h2 id="carCount">0</h2>-->
+<!--        </div>-->
+<!--        <div class="card text-white bg-success p-3" style="width: 18rem;">-->
+<!--            <h4>Total Drivers</h4>-->
+<!--            <h2 id="driverCount">0</h2>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Latest Entries &ndash;&gt;-->
+<!--    <div class="row mt-4">-->
+<!--        <div class="col-md-6">-->
+<!--            <h5>Latest Registered Cars</h5>-->
+<!--            <table class="table table-striped">-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                    <th>Car ID</th>-->
+<!--                    <th>Brand</th>-->
+<!--                    <th>Model</th>-->
+<!--                    <th>Year</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody id="latestCars"></tbody>-->
+<!--            </table>-->
+<!--        </div>-->
+<!--        <div class="col-md-6">-->
+<!--            <h5>Latest Registered Drivers</h5>-->
+<!--            <table class="table table-striped">-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                    <th>Driver ID</th>-->
+<!--                    <th>Name</th>-->
+<!--                    <th>Age</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody id="latestDrivers"></tbody>-->
+<!--            </table>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Quick Actions &ndash;&gt;-->
+<!--    <div class="text-center mt-4">-->
+<!--        <button class="btn btn-primary" id="addCarBtn">Add New Car</button>-->
+<!--        <button class="btn btn-success" id="addDriverBtn">Add New Driver</button>-->
+<!--    </div>-->
+<!--</div>-->
+
 
 <!-- Car Registration and List -->
 <div id="cars-content" class="mt-4" style="display: flex;">
@@ -148,62 +202,65 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script src="admindashboardController.js"></script>
 <script src="carController.js"></script>
 <script src="driverController.js"></script>
 
 <script>
-    $(document).ready(function () {
-        // Handle tab switching and showing content
-        $(".nav-link").click(function () {
-            $(".nav-link").removeClass("active");
-            $(this).addClass("active");
-
-            let selectedTab = $(this).attr("id");
-
-            if (selectedTab === "dashboard-tab") {
-                $("#content").show();
-                $("#cars-content").hide();
-                $("#drivers-content").hide();
-            } else if (selectedTab === "cars-tab") {
-                $("#content").hide();
-                $("#cars-content").show();
-                $("#drivers-content").hide();
-                // Handle tab switching and showing content
-                $(".nav-link").click(function () {
-                    $(".nav-link").removeClass("active");
-                    $(this).addClass("active");
-
-                    let selectedTab = $(this).attr("id");
-
-                    if (selectedTab === "dashboard-tab") {
-                        $("#content").show();
-                        $("#cars-content").hide();
-                        $("#drivers-content").hide();
-                    } else if (selectedTab === "cars-tab") {
-                        $("#content").hide();
-                        $("#cars-content").show();
-                        $("#drivers-content").hide();
-                        generateCarID();
-                    } else if (selectedTab === "drivers-tab") {
-                        $("#content").hide();
-                        $("#cars-content").hide();
-                        $("#drivers-content").show();
-                        generateDriverID();
-                    }
-                });
-
-                // Trigger the dashboard tab by default
-                $("#dashboard-tab").click();
-            } else if (selectedTab === "drivers-tab") {
-                $("#content").hide();
-                $("#cars-content").hide();
-                $("#drivers-content").show();
-            }
-        });
-
-        // Trigger the dashboard tab by default
-        $("#dashboard-tab").click();
-    });
+    // $(document).ready(function () {
+    //     // Handle tab switching and showing content
+    //     $(".nav-link").click(function () {
+    //         $(".nav-link").removeClass("active");
+    //         $(this).addClass("active");
+    //
+    //         let selectedTab = $(this).attr("id");
+    //
+    //         if (selectedTab === "dashboard-tab") {
+    //             $("#content").show();
+    //             $("#cars-content").hide();
+    //             $("#drivers-content").hide();
+    //         } else if (selectedTab === "cars-tab") {
+    //             $("#content").hide();
+    //             $("#cars-content").show();
+    //             $("#drivers-content").hide();
+    //             generateCarID();
+    //             // Handle tab switching and showing content
+    //             $(".nav-link").click(function () {
+    //                 $(".nav-link").removeClass("active");
+    //                 $(this).addClass("active");
+    //
+    //                 let selectedTab = $(this).attr("id");
+    //
+    //                 if (selectedTab === "dashboard-tab") {
+    //                     $("#content").show();
+    //                     $("#cars-content").hide();
+    //                     $("#drivers-content").hide();
+    //                 } else if (selectedTab === "cars-tab") {
+    //                     $("#content").hide();
+    //                     $("#cars-content").show();
+    //                     $("#drivers-content").hide();
+    //
+    //                 } else if (selectedTab === "drivers-tab") {
+    //                     $("#content").hide();
+    //                     $("#cars-content").hide();
+    //                     $("#drivers-content").show();
+    //
+    //                 }
+    //             });
+    //
+    //             // Trigger the dashboard tab by default
+    //             $("#dashboard-tab").click();
+    //         } else if (selectedTab === "drivers-tab") {
+    //             $("#content").hide();
+    //             $("#cars-content").hide();
+    //             $("#drivers-content").show();
+    //             generateDriverID();
+    //         }
+    //     });
+    //
+    //     // Trigger the dashboard tab by default
+    //     $("#dashboard-tab").click();
+    // });
 </script>
 
 </body>
