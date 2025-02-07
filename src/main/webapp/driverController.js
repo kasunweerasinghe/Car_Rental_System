@@ -147,6 +147,23 @@ $(document).ready(function () {
                 bindRowClickEvents();
                 setTextFieldValues("", "", "", "");
                 generateDriverID();
+                getDriverCount();
+            }
+        });
+    }
+
+    function getDriverCount() {
+        console.log('here')
+        $.ajax({
+            url: "driver",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                let count = data.length;
+                $("#driverCount").text(count);
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching car count:", error);
             }
         });
     }
