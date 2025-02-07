@@ -90,4 +90,21 @@ public class CarDAO {
         return false;
     }
 
+    // Get the total count of cars
+    public int getCarCount() {
+        String query = "SELECT COUNT(*) FROM Car";
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0; // Return 0 if there's an error
+    }
+
+
 }

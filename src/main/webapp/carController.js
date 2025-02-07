@@ -78,7 +78,6 @@ $(document).ready(function () {
         });
     });
 
-
     //delete selected car
     $("#btnDelete").click(function () {
         let id = $("#carId").val();
@@ -149,6 +148,22 @@ $(document).ready(function () {
                 bindRowClickEvents();
                 setTextFieldValues("", "", "", "");
                 generateCarID();
+                getCarCount();
+            }
+        });
+    }
+
+    function getCarCount() {
+        $.ajax({
+            url: "car",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                let count = data.length;
+                $("#carCount").text(count);
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching car count:", error);
             }
         });
     }

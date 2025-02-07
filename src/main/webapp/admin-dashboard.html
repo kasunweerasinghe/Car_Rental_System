@@ -43,60 +43,56 @@
 <div id="content" class="mt-4">
     <h1 class="text-center">Welcome to Admin Dashboard</h1>
     <p class="text-center">Select a menu option to manage cars or drivers.</p>
+
+    <!-- Summary Cards -->
+    <div class="d-flex justify-content-center gap-4">
+        <div class="card text-white bg-primary p-3" style="width: 18rem;">
+            <h4>Total Cars</h4>
+            <h2 id="carCount">0</h2>
+        </div>
+        <div class="card text-white bg-success p-3" style="width: 18rem;">
+            <h4>Total Drivers</h4>
+            <h2 id="driverCount">0</h2>
+        </div>
+    </div>
+
+    <!-- Latest Entries -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h5>Latest Registered Cars</h5>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Car ID</th>
+                    <th>Brand</th>
+                    <th>Model</th>
+                    <th>Year</th>
+                </tr>
+                </thead>
+                <tbody id="latestCars"></tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h5>Latest Registered Drivers</h5>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Driver ID</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                </tr>
+                </thead>
+                <tbody id="latestDrivers"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="text-center mt-4">
+        <button class="btn btn-primary" id="addCarBtn">Add New Car</button>
+        <button class="btn btn-success" id="addDriverBtn">Add New Driver</button>
+    </div>
 </div>
-<!--<div id="content" class="mt-4">-->
-<!--    <h1 class="text-center">Welcome to Admin Dashboard</h1>-->
-<!--    <p class="text-center">Select a menu option to manage cars or drivers.</p>-->
-
-<!--    &lt;!&ndash; Summary Cards &ndash;&gt;-->
-<!--    <div class="d-flex justify-content-center gap-4">-->
-<!--        <div class="card text-white bg-primary p-3" style="width: 18rem;">-->
-<!--            <h4>Total Cars</h4>-->
-<!--            <h2 id="carCount">0</h2>-->
-<!--        </div>-->
-<!--        <div class="card text-white bg-success p-3" style="width: 18rem;">-->
-<!--            <h4>Total Drivers</h4>-->
-<!--            <h2 id="driverCount">0</h2>-->
-<!--        </div>-->
-<!--    </div>-->
-
-<!--    &lt;!&ndash; Latest Entries &ndash;&gt;-->
-<!--    <div class="row mt-4">-->
-<!--        <div class="col-md-6">-->
-<!--            <h5>Latest Registered Cars</h5>-->
-<!--            <table class="table table-striped">-->
-<!--                <thead>-->
-<!--                <tr>-->
-<!--                    <th>Car ID</th>-->
-<!--                    <th>Brand</th>-->
-<!--                    <th>Model</th>-->
-<!--                    <th>Year</th>-->
-<!--                </tr>-->
-<!--                </thead>-->
-<!--                <tbody id="latestCars"></tbody>-->
-<!--            </table>-->
-<!--        </div>-->
-<!--        <div class="col-md-6">-->
-<!--            <h5>Latest Registered Drivers</h5>-->
-<!--            <table class="table table-striped">-->
-<!--                <thead>-->
-<!--                <tr>-->
-<!--                    <th>Driver ID</th>-->
-<!--                    <th>Name</th>-->
-<!--                    <th>Age</th>-->
-<!--                </tr>-->
-<!--                </thead>-->
-<!--                <tbody id="latestDrivers"></tbody>-->
-<!--            </table>-->
-<!--        </div>-->
-<!--    </div>-->
-
-<!--    &lt;!&ndash; Quick Actions &ndash;&gt;-->
-<!--    <div class="text-center mt-4">-->
-<!--        <button class="btn btn-primary" id="addCarBtn">Add New Car</button>-->
-<!--        <button class="btn btn-success" id="addDriverBtn">Add New Driver</button>-->
-<!--    </div>-->
-<!--</div>-->
 
 
 <!-- Car Registration and List -->

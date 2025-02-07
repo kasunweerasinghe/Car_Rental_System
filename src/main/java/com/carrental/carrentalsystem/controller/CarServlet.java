@@ -61,6 +61,10 @@ public class CarServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(new Gson().toJson(carDAO.getAllCars()));
 
+        int carCount = carDAO.getCarCount();
+        JsonObject jsonResponse = new JsonObject();
+        jsonResponse.addProperty("carCount", carCount);
+
     }
 
     @Override
@@ -135,6 +139,5 @@ public class CarServlet extends HttpServlet {
         out.print(jsonResponse);
         out.flush();
     }
-
 
 }
