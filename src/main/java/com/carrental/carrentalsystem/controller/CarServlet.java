@@ -1,0 +1,143 @@
+/**
+ * created by kasun weerasinghe
+ * Date: 2/4/25
+ * Time: 10:20 AM
+ * Project Name: CarRentalSystem
+ */
+
+package com.carrental.carrentalsystem.controller;
+
+import com.carrental.carrentalsystem.dao.CarDAO;
+import com.carrental.carrentalsystem.model.Car;
+import com.carrental.carrentalsystem.util.DatabaseConnection;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
+
+
+@WebServlet("/car")
+public class CarServlet extends HttpServlet {
+    private CarDAO carDAO = new CarDAO();
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            String carId = request.getParameter("carId");
+            String brand = request.getParameter("brand");
+            String model = request.getParameter("model");
+            int year = Integer.parseInt(request.getParameter("year"));
+            double price = Double.parseDouble(request.getParameter("price"));
+
+            Car car = new Car(carId, brand, model, year, price, true);
+            boolean isAdded = carDAO.addCar(car);
+
+            if (isAdded) {
+                response.getWriter().write("success");
+            } else {
+                response.getWriter().write("error");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.getWriter().write("error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(new Gson().toJson(carDAO.getAllCars()));
+
+        int carCount = carDAO.getCarCount();
+        JsonObject jsonResponse = new JsonObject();
+        jsonResponse.addProperty("carCount", carCount);
+
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        JsonObject jsonResponse = new JsonObject();
+
+        String idParam = request.getParameter("id");
+
+        if (idParam == null || idParam.isEmpty()) {
+            jsonResponse.addProperty("message", "Car ID is required");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.print(jsonResponse);
+            out.flush();
+            return;
+        }
+
+        boolean isDeleted = carDAO.deleteCar(idParam);
+
+        if (isDeleted) {
+            jsonResponse.addProperty("message", "Car deleted successfully");
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            jsonResponse.addProperty("message", "Car not found or could not be deleted");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+
+        out.print(jsonResponse);
+        out.flush();
+    }
+
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+        JsonObject jsonResponse = new JsonObject();
+
+        // Read the JSON body
+        StringBuilder sb = new StringBuilder();
+        String line;
+        try (BufferedReader reader = request.getReader()) {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+        }
+
+        // Parse JSON body
+        Gson gson = new Gson();
+        Car car = gson.fromJson(sb.toString(), Car.class);
+
+        if (car.getCarId() == null || car.getCarId().isEmpty()) {
+            jsonResponse.addProperty("message", "Car ID is required");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            out.print(jsonResponse);
+            out.flush();
+            return;
+        }
+
+        boolean isUpdated = carDAO.updateCar(car);
+
+        if (isUpdated) {
+            jsonResponse.addProperty("message", "Car updated successfully");
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            jsonResponse.addProperty("message", "Car not found or could not be updated");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+
+        out.print(jsonResponse);
+        out.flush();
+    }
+
+}

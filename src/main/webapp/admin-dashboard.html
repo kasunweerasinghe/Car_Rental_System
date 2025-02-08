@@ -13,6 +13,7 @@
     <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="carController.js"></script>
 </head>
 <body class="container mt-4">
 
@@ -22,13 +23,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" id="dashboard-tab" href="#">Admin Dashboard</a>
+                    <a class="nav-link active" id="dashboard-tab">Admin Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="cars-tab" href="#">Cars</a>
+                    <a class="nav-link" id="cars-tab">Cars</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="drivers-tab" href="#">Drivers</a>
+                    <a class="nav-link" id="drivers-tab">Drivers</a>
                 </li>
             </ul>
         </div>
@@ -42,40 +43,65 @@
 <div id="content" class="mt-4">
     <h1 class="text-center">Welcome to Admin Dashboard</h1>
     <p class="text-center">Select a menu option to manage cars or drivers.</p>
+
+    <!-- Summary Cards -->
+    <div class="d-flex justify-content-center gap-4">
+        <div class="card text-white bg-primary p-3" style="width: 18rem;">
+            <h4>Total Cars</h4>
+            <h2 id="carCount">0</h2>
+        </div>
+        <div class="card text-white bg-success p-3" style="width: 18rem;">
+            <h4>Total Drivers</h4>
+            <h2 id="driverCount">0</h2>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="text-center mt-4">
+        <button class="btn btn-primary" id="addCarBtn">Add New Car</button>
+        <button class="btn btn-success" id="addDriverBtn">Add New Driver</button>
+    </div>
 </div>
 
+
 <!-- Car Registration and List -->
-<div id="cars-content" class="mt-4" style="display: none;">
-    <div class="card shadow p-4">
+<div id="cars-content" class="mt-4" style="display: flex;">
+    <div class="card shadow p-3 col-4">
         <h2 class="text-center text-primary">Car Registration</h2>
         <form id="carForm">
-            <div class="mb-3">
-                <label for="carBrand" class="form-label">Brand</label>
-                <input type="text" class="form-control" id="carBrand" required>
-            </div>
-            <div class="mb-3">
-                <label for="carModel" class="form-label">Model</label>
-                <input type="text" class="form-control" id="carModel" required>
-            </div>
-            <div class="mb-3">
-                <label for="carYear" class="form-label">Year</label>
-                <input type="number" class="form-control" id="carYear" min="1990" max="2030" required>
-            </div>
-            <div class="mb-3">
-                <label for="carPrice" class="form-label">Price (per day)</label>
-                <input type="number" class="form-control" id="carPrice" step="0.01" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Save Car</button>
+                <div class="mb-3">
+                    <label for="carId" class="form-label">Car ID</label>
+                    <input type="text" class="form-control" id="carId" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="carBrand" class="form-label">Brand</label>
+                    <input type="text" class="form-control" id="carBrand" required>
+                </div>
+                <div class="mb-3">
+                    <label for="carModel" class="form-label">Model</label>
+                    <input type="text" class="form-control" id="carModel" required>
+                </div>
+                <div class="mb-3">
+                    <label for="carYear" class="form-label">Year</label>
+                    <input type="number" class="form-control" id="carYear" min="1990" max="2030" required>
+                </div>
+                <div class="mb-3">
+                    <label for="carPrice" class="form-label">Price (per day)</label>
+                    <input type="number" class="form-control" id="carPrice" step="0.01" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="btnSave">Save Car</button>
+                <button type="button" class="btn btn-warning" id="btnUpdate">Update</button>
+                <button type="button" class="btn btn-danger" id="btnDelete">Delete</button>
+                <button type="button" class="btn btn-info" id="btnClear">Clear All</button>
         </form>
     </div>
 
-    <hr>
-
-    <div class="card shadow p-4 mt-4">
+    <div class="card shadow p-3 col-8" style="margin-left: 4px">
         <h2 class="text-center text-success">Car List</h2>
         <table class="table table-striped table-hover">
             <thead class="table-dark">
             <tr>
+                <th>Car ID</th>
                 <th>Brand</th>
                 <th>Model</th>
                 <th>Year</th>
@@ -83,76 +109,67 @@
             </tr>
             </thead>
             <tbody id="carList">
-            <!-- Dynamically populated car list will go here -->
             </tbody>
         </table>
     </div>
 </div>
 
 <!-- Drivers Management -->
-<div id="drivers-content" class="mt-4" style="display: none;">
-    <div class="card shadow p-4">
+<div id="drivers-content" class="mt-4" style="display: flex;">
+    <div class="card shadow p-4 col-4">
         <h2 class="text-center text-primary">Driver Registration</h2>
         <form id="driverForm">
+            <div class="mb-3">
+                <label for="driverId" class="form-label">Driver ID</label>
+                <input type="text" class="form-control" id="driverId" disabled>
+            </div>
             <div class="mb-3">
                 <label for="driverName" class="form-label">Name</label>
                 <input type="text" class="form-control" id="driverName" required>
             </div>
             <div class="mb-3">
-                <label for="driverLicense" class="form-label">License Number</label>
-                <input type="text" class="form-control" id="driverLicense" required>
+                <label for="driverAddress" class="form-label">Address</label>
+                <input type="text" class="form-control" id="driverAddress" required>
             </div>
-            <button type="submit" class="btn btn-primary w-100">Save Driver</button>
+            <div class="mb-3">
+                <label for="driverAge" class="form-label">Age</label>
+                <input type="text" class="form-control" id="driverAge" required>
+            </div>
+            <div class="mb-3">
+                <label for="driverNationalId" class="form-label">ID Number</label>
+                <input type="text" class="form-control" id="driverNationalId" required>
+            </div>
+            <button type="submit" class="btn btn-primary" id="btnDriverSave">Save Driver</button>
+            <button type="button" class="btn btn-warning" id="btnDriverUpdate">Update</button>
+            <button type="button" class="btn btn-danger" id="btnDriverDelete">Delete</button>
+            <button type="button" class="btn btn-info" id="btnDriverClear">Clear All</button>
         </form>
     </div>
 
-    <hr>
-
-    <div class="card shadow p-4 mt-4">
+    <div class="card shadow p-4 col-8" style="margin-left: 4px">
         <h2 class="text-center text-success">Driver List</h2>
         <table class="table table-striped table-hover">
             <thead class="table-dark">
             <tr>
-                <th>Name</th>
-                <th>License Number</th>
+                <th>ID</th>
+                <th>Driver Name</th>
+                <th>Driver Address</th>
+                <th>Driver Age</th>
+                <th>Driver National ID</th>
             </tr>
             </thead>
             <tbody id="driverList">
-            <!-- Dynamically populated driver list will go here -->
             </tbody>
         </table>
     </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        // Handle tab switching and showing content
-        $(".nav-link").click(function () {
-            $(".nav-link").removeClass("active");
-            $(this).addClass("active");
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-            let selectedTab = $(this).attr("id");
-
-            if (selectedTab === "dashboard-tab") {
-                $("#content").show();
-                $("#cars-content").hide();
-                $("#drivers-content").hide();
-            } else if (selectedTab === "cars-tab") {
-                $("#content").hide();
-                $("#cars-content").show();
-                $("#drivers-content").hide();
-            } else if (selectedTab === "drivers-tab") {
-                $("#content").hide();
-                $("#cars-content").hide();
-                $("#drivers-content").show();
-            }
-        });
-
-        // Trigger the dashboard tab by default
-        $("#dashboard-tab").click();
-    });
-</script>
+<script src="admindashboardController.js"></script>
+<script src="carController.js"></script>
+<script src="driverController.js"></script>
 
 </body>
 </html>
