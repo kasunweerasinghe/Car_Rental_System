@@ -54,4 +54,25 @@ public class CarDataToBookingDAO {
         }
         return models;
     }
+
+    public int getCarPrice(String brand, String model) {
+        String query = "SELECT price FROM Car WHERE brand = ? AND model = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setString(1, brand);
+            stmt.setString(2, model);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("price");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();  // Log error in server console
+        }
+        return 0;  // Default to 0 if price not found
+    }
+
 }

@@ -3,6 +3,7 @@ $(document).ready(function () {
     document.getElementById("bookingBtn").disabled = true;
     const $carBrandSelect = $("#carBrand");
     const $carModelSelect = $("#carModel");
+    const $pricePerDayInput = $("#pricePerDay");
 
     generateBookingID();
     getCurrentDate();
@@ -10,10 +11,46 @@ $(document).ready(function () {
     loadCarBrands();
     loadCarModels();
 
+    // When brand changes, load models for that brand
+    $carBrandSelect.change(function () {
+        const selectedBrand = $(this).val();
+
+        // Clear model and price
+        $carModelSelect.empty().append('<option value="">Select Model</option>');
+        $pricePerDayInput.val(""); // Clear price initially
+
+        if (selectedBrand) {
+            loadCarModels(selectedBrand); // Load models for the selected brand
+        }
+    });
+
+    // When a model is selected, load the price
+    $carModelSelect.change(function () {
+        const selectedBrand = $carBrandSelect.val();
+        const selectedModel = $(this).val();
+        $pricePerDayInput.val(""); // Clear price initially
+
+        if (selectedBrand && selectedModel) {
+            $.ajax({
+                url: `carBookingData?action=price&brand=${encodeURIComponent(selectedBrand)}&model=${encodeURIComponent(selectedModel)}`,
+                method: "GET",
+                success: function (data) {
+                    if (data.price) {
+                        $pricePerDayInput.val(data.price);
+                    }
+                },
+                error: function () {
+                    console.error("Failed to load car price.");
+                }
+            });
+        }
+    });
+
     // Load car brands
     function loadCarBrands() {
         $.ajax({
             url: 'carBookingData',
+            method: 'GET',
             success: function (data) {
                 $carBrandSelect.empty().append('<option value="">Select Brand</option>');
                 data.forEach(function (brand) {
@@ -26,27 +63,19 @@ $(document).ready(function () {
         });
     }
 
-    // Load models when a brand is selected
-    function loadCarModels() {
-        $carBrandSelect.change(function () {
-            const selectedBrand = $(this).val();
-
-            if (selectedBrand) {
-                $.ajax({
-                    url: "carBookingData?action=models&brand=" + encodeURIComponent(selectedBrand),
-                    method: "GET",
-                    success: function (data) {
-                        $carModelSelect.empty().append('<option value="">Select Model</option>');
-                        data.forEach(function (model) {
-                            $carModelSelect.append('<option value="' + model + '">' + model + '</option>');
-                        });
-                    },
-                    error: function () {
-                        console.error("Failed to load car models.");
-                    }
-                });
-            } else {
+    // Load car models based on selected brand
+    function loadCarModels(brand) {
+        $.ajax({
+            url: `carBookingData?action=models&brand=${encodeURIComponent(brand)}`,
+            method: "GET",
+            success: function (data) {
                 $carModelSelect.empty().append('<option value="">Select Model</option>');
+                data.forEach(function (model) {
+                    $carModelSelect.append('<option value="' + model + '">' + model + '</option>');
+                });
+            },
+            error: function () {
+                console.error("Failed to load car models.");
             }
         });
     }

@@ -1,13 +1,5 @@
-/**
- * created by kasun weerasinghe
- * Date: 2/8/25
- * Time: 12:18 PM
- * Project Name: CarRentalSystem
- */
-
 package com.carrental.carrentalsystem.controller;
 
-import com.carrental.carrentalsystem.dao.CarDAO;
 import com.carrental.carrentalsystem.dao.CarDataToBookingDAO;
 import com.google.gson.Gson;
 
@@ -18,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet("/carBookingData")
 public class CarDataToBookingServlet extends HttpServlet {
@@ -35,11 +29,23 @@ public class CarDataToBookingServlet extends HttpServlet {
             List<String> models = carDataToBookingDAO.getCarModelsByBrand(brand);
             String json = new Gson().toJson(models);
             response.getWriter().write(json);
+        } else if ("price".equals(action)) {
+            String brand = request.getParameter("brand");
+            String model = request.getParameter("model");
+            int price = carDataToBookingDAO.getCarPrice(brand, model);
+
+            // Creating a HashMap to return price in JSON format
+            Map<String, Integer> priceMap = new HashMap<>();
+            priceMap.put("price", price);
+            System.out.println(priceMap);
+
+            String json = new Gson().toJson(priceMap);
+            response.getWriter().write(json);
         } else {
+            // Default: Load brands
             List<String> brands = carDataToBookingDAO.getCarBrands();
             String json = new Gson().toJson(brands);
             response.getWriter().write(json);
         }
     }
-
 }
