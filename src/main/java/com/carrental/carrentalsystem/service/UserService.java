@@ -20,4 +20,5 @@ public class UserService {
     public boolean registerUser(User user) {
         return userDAO.insertUser(user);
     }
+
 }

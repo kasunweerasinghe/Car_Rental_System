@@ -72,12 +72,18 @@
                 type: "POST",
                 data: { username: username, password: password },
                 success: function (response) {
-                    if (response === "admin") {
-                        window.location.href = "admin-dashboard.html"; // Redirect to Admin Dashboard
-                    } else if (response === "customer") {
-                        window.location.href = "customer-dashboard.html"; // Redirect to Customer Dashboard
+                    if (response === "admin" || response === "customer") {
+                        let userData = {
+                            username: username,
+                            role: response
+                        };
+                        localStorage.setItem("currentUser", JSON.stringify(userData));
+                        console.log(userData)
+
+                        let redirectPage = response === "admin" ? "admin-dashboard.html" : "customer-dashboard.html";
+                        window.location.href = redirectPage;
                     } else {
-                        $("#errorMessage").show(); // Show error message
+                        $("#errorMessage").text("Invalid username or password!").show();
                     }
                 },
                 error: function () {
@@ -85,6 +91,7 @@
                 }
             });
         });
+
     });
 </script>
 

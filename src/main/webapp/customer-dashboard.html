@@ -101,8 +101,29 @@
 
 <!-- Booking Details Section -->
 <div id="booking-details-content" class="mt-4">
-    <h1>Booking Details</h1>
+    <h1 class="text-center text-primary">Booking Details</h1>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>Booking ID</th>
+                <th>Customer Name</th>
+                <th>Car</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Price (Total)</th>
+                <th>Driver Name</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="bookingTableBody">
+
+            </tbody>
+        </table>
+    </div>
 </div>
+
 
 <script src="customerDashboardController.js"></script>
 <script src="carBookingController.js"></script>

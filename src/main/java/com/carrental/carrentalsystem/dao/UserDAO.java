@@ -17,6 +17,24 @@ import java.sql.SQLException;
 
 public class UserDAO {
 
+    public boolean insertUser(User user) {
+        String query = "INSERT INTO Customer (username, password, email, role) VALUES (?, ?, ?, ?)";
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, user.getUsername());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setString(3, user.getEmail());
+            preparedStatement.setString(4, user.getRole());
+
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public User getUserByUsernameAndPassword(String username, String password) {
         User user = null;
         String query = "SELECT * FROM Customer WHERE username = ? AND password = ?";
@@ -34,31 +52,13 @@ public class UserDAO {
                         resultSet.getString("username"),
                         resultSet.getString("password"),
                         resultSet.getString("email"),
-                        "customer" // Assuming the role is customer
+                        "customer"
                 );
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return user;
-    }
-
-    public boolean insertUser(User user) {
-        String query = "INSERT INTO Customer (username, password, email, role) VALUES (?, ?, ?, ?)"; // ✅ Added email field
-
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-
-            preparedStatement.setString(1, user.getUsername());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setString(3, user.getEmail());
-            preparedStatement.setString(4, user.getRole());
-
-            return preparedStatement.executeUpdate() > 0; // If at least one row is affected, return true
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 
 }

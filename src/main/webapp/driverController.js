@@ -153,7 +153,6 @@ $(document).ready(function () {
     }
 
     function getDriverCount() {
-        console.log('here')
         $.ajax({
             url: "driver",
             method: "GET",
