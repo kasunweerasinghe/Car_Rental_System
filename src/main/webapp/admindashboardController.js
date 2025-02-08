@@ -12,14 +12,10 @@ $(document).ready(function () {
             $("#content").hide();
             $("#cars-content").show();
             $("#drivers-content").hide();
-            generateCarID();
-            // Trigger the dashboard tab by default
-            $("#dashboard-tab").click();
         } else if (selectedTab === "drivers-tab") {
             $("#content").hide();
             $("#cars-content").hide();
             $("#drivers-content").show();
-            generateDriverID();
         }
     });
     // Trigger the dashboard tab by default
