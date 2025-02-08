@@ -55,6 +55,7 @@ public class CarDataToBookingDAO {
         return models;
     }
 
+    // Method to get the price of a specific car
     public int getCarPrice(String brand, String model) {
         String query = "SELECT price FROM Car WHERE brand = ? AND model = ?";
 
