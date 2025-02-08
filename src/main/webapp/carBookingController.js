@@ -10,6 +10,20 @@ $(document).ready(function () {
     getCurrentLoggedUserName();
     loadCarBrands();
     loadCarModels();
+    loadAvailableDrivers();
+
+    $("#driverName").change(function () {
+        let selectedDriverId = $(this).val();
+        let selectedDriver = $(this).find(":selected").data();
+
+        if (selectedDriverId) {
+            $("#driverId").val(selectedDriver.id);
+            $("#driverAge").val(selectedDriver.age);
+        } else {
+            $("#driverId").val("");
+            $("#driverAge").val("");
+        }
+    });
 
     // When brand changes, load models for that brand
     $carBrandSelect.change(function () {
@@ -45,6 +59,28 @@ $(document).ready(function () {
             });
         }
     });
+
+    function loadAvailableDrivers() {
+        $.ajax({
+            url: "getAvailableDrivers",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                let dropdown = $("#driverName");
+                dropdown.empty().append('<option value="">Select a driver</option>');
+
+                $.each(data, function (index, driver) {
+                    dropdown.append(
+                        `<option value="${driver.driverId}" data-id="${driver.driverId}" data-age="${driver.driverAge}">${driver.driverName}</option>`
+                    );
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching available drivers:", error);
+            }
+        });
+    }
 
     // Load car brands
     function loadCarBrands() {
