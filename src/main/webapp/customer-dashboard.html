@@ -58,16 +58,16 @@
 
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <label for="pricePerDay" class="form-label">Price (per day)</label>
-                    <input type="number" class="form-control" id="pricePerDay" disabled>
+                    <label for="carBrand" class="form-label">Car Brand</label>
+                    <select class="form-select" id="carBrand"></select>
                 </div>
                 <div class="col-md-4">
                     <label for="carModel" class="form-label">Car Model</label>
                     <select class="form-select" id="carModel"></select>
                 </div>
                 <div class="col-md-4">
-                    <label for="carBrand" class="form-label">Car Brand</label>
-                    <select class="form-select" id="carBrand"></select>
+                    <label for="pricePerDay" class="form-label">Price (per day)</label>
+                    <input type="number" class="form-control" id="pricePerDay" disabled>
                 </div>
             </div>
 
@@ -80,7 +80,16 @@
                     <label for="endDate" class="form-label">End Date</label>
                     <input aria-label="Date" class="form-control" id="endDate" type="date">
                 </div>
-
+                <div class="col-md-4 d-flex" style="gap: 70px">
+                    <div class="col-5">
+                        <label for="driverId" class="form-label">Driver ID</label>
+                        <input type="text" class="form-control" id="driverId" disabled>
+                    </div>
+                    <div class="col-5">
+                        <label for="driverName" class="form-label">Driver Name</label>
+                        <input type="text" class="form-control" id="driverName" disabled>
+                    </div>
+                </div>
             </div>
 
             <div class="text-center">
