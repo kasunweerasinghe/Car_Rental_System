@@ -1,9 +1,55 @@
 $(document).ready(function () {
     let bookings = [];
+    document.getElementById("bookingBtn").disabled = true;
+    const $carBrandSelect = $("#carBrand");
+    const $carModelSelect = $("#carModel");
 
     generateBookingID();
     getCurrentDate();
     getCurrentLoggedUserName();
+    loadCarBrands();
+    loadCarModels();
+
+    // Load car brands
+    function loadCarBrands() {
+        $.ajax({
+            url: 'carBookingData',
+            success: function (data) {
+                $carBrandSelect.empty().append('<option value="">Select Brand</option>');
+                data.forEach(function (brand) {
+                    $carBrandSelect.append('<option value="' + brand + '">' + brand + '</option>');
+                });
+            },
+            error: function () {
+                console.error("Failed to load car brands.");
+            }
+        });
+    }
+
+    // Load models when a brand is selected
+    function loadCarModels() {
+        $carBrandSelect.change(function () {
+            const selectedBrand = $(this).val();
+
+            if (selectedBrand) {
+                $.ajax({
+                    url: "carBookingData?action=models&brand=" + encodeURIComponent(selectedBrand),
+                    method: "GET",
+                    success: function (data) {
+                        $carModelSelect.empty().append('<option value="">Select Model</option>');
+                        data.forEach(function (model) {
+                            $carModelSelect.append('<option value="' + model + '">' + model + '</option>');
+                        });
+                    },
+                    error: function () {
+                        console.error("Failed to load car models.");
+                    }
+                });
+            } else {
+                $carModelSelect.empty().append('<option value="">Select Model</option>');
+            }
+        });
+    }
 
     //get current logged user name
     function getCurrentLoggedUserName() {
