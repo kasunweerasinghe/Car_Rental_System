@@ -1,6 +1,6 @@
 $(document).ready(function () {
     let bookings = [];
-    document.getElementById("bookingBtn").disabled = true;
+    // document.getElementById("bookingBtn").disabled = true;
     const $carBrandSelect = $("#carBrand");
     const $carModelSelect = $("#carModel");
     const $pricePerDayInput = $("#pricePerDay");
@@ -11,6 +11,7 @@ $(document).ready(function () {
     loadCarBrands();
     loadCarModels();
     loadAvailableDrivers();
+    validateForm();
 
     $("#driverName").change(function () {
         let selectedDriverId = $(this).val();
@@ -66,7 +67,6 @@ $(document).ready(function () {
             method: "GET",
             dataType: "json",
             success: function (data) {
-                console.log(data)
                 let dropdown = $("#driverName");
                 dropdown.empty().append('<option value="">Select a driver</option>');
 
@@ -167,4 +167,30 @@ $(document).ready(function () {
             $("#bookingId").val("CB-001");
         }
     }
+
+    // validate form (enable/disable booking now btn)
+    function validateForm() {
+        let isValid = true;
+
+        // Check all text inputs, number inputs, and date inputs
+        $("#bookingForm input").each(function () {
+            if ($(this).prop("disabled") === false && $(this).val().trim() === "") {
+                isValid = false;
+                return false; // Break the loop
+            }
+        });
+
+        // Check all select dropdowns
+        $("#bookingForm select").each(function () {
+            if ($(this).val() === null || $(this).val() === "") {
+                isValid = false;
+                return false; // Break the loop
+            }
+        });
+
+        // Enable or disable the button based on validation
+        $("#bookingBtn").prop("disabled", !isValid);
+    }
+
+    $("#bookingForm input, #bookingForm select").on("input change", validateForm);
 });
