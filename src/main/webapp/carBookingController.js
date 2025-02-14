@@ -224,5 +224,6 @@ $(document).ready(function () {
         $("#bookingBtn").prop("disabled", !isValid);
     }
 
+    // Initialize form validation
     $("#bookingForm input, #bookingForm select").on("input change", validateForm);
 });
