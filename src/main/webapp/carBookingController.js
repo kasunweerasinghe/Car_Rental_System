@@ -169,6 +169,7 @@ $(document).ready(function () {
         }
     }
 
+    // fetch colombo cities
     function fetchColomboCities() {
         let username = "kasunweerasinghe";
         let url = `http://api.geonames.org/searchJSON?q=Colombo&country=LK&maxRows=30&username=${username}`;
@@ -188,6 +189,7 @@ $(document).ready(function () {
         });
     }
 
+    // populate dropdown
     function populateDropdown(selector, cityList) {
         let dropdown = $(selector);
         dropdown.empty();
