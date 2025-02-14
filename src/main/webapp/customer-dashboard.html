@@ -63,32 +63,42 @@
                     <select class="form-select" id="carModel"></select>
                 </div>
                 <div class="col-md-4">
-                    <label for="pricePerDay" class="form-label">Price (per day)</label>
+                    <label for="pricePerDay" class="form-label">Price</label>
                     <input type="number" class="form-control" id="pricePerDay" disabled>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-4">
-                    <label for="startDate" class="form-label">Start Date</label>
+                    <label for="pickupLocation" class="form-label">Pickup Location</label>
+                    <select class="form-select" id="pickupLocation"></select>
+                </div>
+                <div class="col-md-4">
+                    <label for="dropLocation" class="form-label">Drop Location</label>
+                    <select class="form-select" id="dropLocation"></select>
+                </div>
+                <div class="col-md-4">
+                    <label for="startDate" class="form-label">Trip Start Date</label>
                     <input aria-label="Date" class="form-control" id="startDate" type="date">
-                </div>
-                <div class="col-md-4">
-                    <label for="endDate" class="form-label">End Date</label>
-                    <input aria-label="Date" class="form-control" id="endDate" type="date">
-                </div>
-                <div class="col-md-4">
-                    <label for="driverName" class="form-label">Driver Name</label>
-                    <select class="form-select" id="driverName"></select>
                 </div>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-4">
+                    <label for="endDate" class="form-label">Trip End Date</label>
+                    <input aria-label="Date" class="form-control" id="endDate" type="date">
+                </div>
+                <div class="col-md-4">
+                    <label for="driverName" class="form-label">Select Driver</label>
+                    <select class="form-select" id="driverName"></select>
+                </div>
+                <div class="col-md-4">
                     <label for="driverId" class="form-label">Driver ID</label>
                     <input type="text" class="form-control" id="driverId" disabled>
                 </div>
+            </div>
 
+            <div class="row mb-3">
                 <div class="col-md-4">
                     <label for="driverAge" class="form-label">Driver Age</label>
                     <input type="text" class="form-control" id="driverAge" disabled>

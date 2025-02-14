@@ -12,6 +12,7 @@ $(document).ready(function () {
     loadCarModels();
     loadAvailableDrivers();
     validateForm();
+    fetchColomboCities();
 
     $("#driverName").change(function () {
         let selectedDriverId = $(this).val();
@@ -166,6 +167,35 @@ $(document).ready(function () {
         } catch (e) {
             $("#bookingId").val("CB-001");
         }
+    }
+
+    function fetchColomboCities() {
+        let username = "kasunweerasinghe";
+        let url = `http://api.geonames.org/searchJSON?q=Colombo&country=LK&maxRows=30&username=${username}`;
+
+        $.ajax({
+            url: url,
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                let cityList = data.geonames.map(city => city.name);
+                populateDropdown("#pickupLocation", cityList);
+                populateDropdown("#dropLocation", cityList);
+            },
+            error: function (error) {
+                console.error("Error fetching Colombo cities:", error);
+            }
+        });
+    }
+
+    function populateDropdown(selector, cityList) {
+        let dropdown = $(selector);
+        dropdown.empty();
+        dropdown.append('<option value="">Select Location</option>');
+
+        cityList.forEach(city => {
+            dropdown.append(`<option value="${city}">${city}</option>`);
+        });
     }
 
     // validate form (enable/disable booking now btn)
