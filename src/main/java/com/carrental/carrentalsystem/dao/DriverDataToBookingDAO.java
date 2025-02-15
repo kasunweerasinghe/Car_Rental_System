@@ -21,8 +21,6 @@ public class DriverDataToBookingDAO {
     public List<Driver> getAvailableDrivers() {
         List<Driver> drivers = new ArrayList<>();
         String query = "SELECT driverId, driverName, driverAge, isDriverAvailable FROM Driver WHERE isDriverAvailable = 1";
-
-
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {

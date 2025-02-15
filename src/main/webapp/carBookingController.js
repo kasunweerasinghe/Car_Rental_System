@@ -5,6 +5,7 @@ $(document).ready(function () {
     const $carModelSelect = $("#carModel");
     const $pricePerDayInput = $("#pricePerDay");
 
+    loadBookings();
     generateBookingID();
     getCurrentDate();
     getCurrentLoggedUserName();
@@ -258,9 +259,35 @@ $(document).ready(function () {
                 driverAge: document.getElementById('driverAge').value,
             },
             success: function (res) {
+                console.log(res)
+                $("#bookingForm")[0].reset();
+                generateBookingID();
             },
             error: function (error) {
+                let cause = JSON.parse(error.responseText).message;
+                alert(cause);
             },
         });
     });
+
+    // load all bookings
+    function loadBookings() {
+        $("#bookingDataList").empty();
+        $.ajax({
+            url: "booking",
+            type: "GET",
+            dataType: "json",
+            success: function (resp) {
+                bookings = resp;
+                for (let booking of bookings) {
+                    var row = `<tr><td>${booking.bookingId}</td><td>${booking.customerName}</td><td>${booking.currentDate}</td>
+                           <td>${booking.carBrand}</td><td>${booking.carModel}</td><td>${booking.price}</td>
+                           <td>${booking.pickupLocation}</td><td>${booking.dropLocation}</td><td>${booking.startDate}</td>
+                           <td>${booking.endDate}</td><td>${booking.driverName}</td><td>${booking.driverId}</td>
+                           <td>${booking.driverAge}</td></tr>`;
+                    $("#bookingDataList").append(row);
+                }
+            }
+        });
+    }
 });

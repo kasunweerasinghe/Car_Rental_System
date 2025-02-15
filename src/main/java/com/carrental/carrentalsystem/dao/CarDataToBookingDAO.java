@@ -18,7 +18,7 @@ public class CarDataToBookingDAO {
     // Method to get all car brands
     public List<String> getCarBrands() {
         List<String> brands = new ArrayList<>();
-        String query = "SELECT DISTINCT brand FROM Car";
+        String query = "SELECT DISTINCT brand FROM Car WHERE isAvailable = 1";
 
         try (Connection connection = DatabaseConnection.getConnection();
              Statement stmt = connection.createStatement();
