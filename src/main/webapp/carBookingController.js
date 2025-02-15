@@ -27,6 +27,9 @@ $(document).ready(function () {
         }
     });
 
+    // Initialize form validation
+    $("#bookingForm input, #bookingForm select").on("input change", validateForm);
+
     // When brand changes, load models for that brand
     $carBrandSelect.change(function () {
         const selectedBrand = $(this).val();
@@ -169,6 +172,11 @@ $(document).ready(function () {
         }
     }
 
+    $('#pickupLocation, #dropLocation').select2({
+        placeholder: "Search for a location",
+        allowClear: true
+    });
+
     // fetch colombo cities
     function fetchColomboCities() {
         let username = "kasunweerasinghe";
@@ -198,6 +206,9 @@ $(document).ready(function () {
         cityList.forEach(city => {
             dropdown.append(`<option value="${city}">${city}</option>`);
         });
+
+        // Refresh Select2
+        dropdown.trigger('change');
     }
 
     // validate form (enable/disable booking now btn)
@@ -224,6 +235,8 @@ $(document).ready(function () {
         $("#bookingBtn").prop("disabled", !isValid);
     }
 
-    // Initialize form validation
-    $("#bookingForm input, #bookingForm select").on("input change", validateForm);
+    // car book
+    $("#bookingForm").submit(function (event) {
+        event.preventDefault();
+    });
 });
