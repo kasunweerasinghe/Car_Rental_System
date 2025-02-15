@@ -238,5 +238,29 @@ $(document).ready(function () {
     // car book
     $("#bookingForm").submit(function (event) {
         event.preventDefault();
+
+        $.ajax({
+            url: "booking",
+            type: "POST",
+            data: {
+                bookingId: document.getElementById('bookingId').value,
+                customerName: document.getElementById('customerName').value,
+                currentDate: document.getElementById('currentDate').value,
+                carBrand: document.getElementById('carBrand').value,
+                carModel: document.getElementById('carModel').value,
+                price: document.getElementById('pricePerDay').value,
+                pickupLocation: document.getElementById('pickupLocation').value,
+                dropLocation: document.getElementById('dropLocation').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value,
+                driverName: document.getElementById('driverName').options[document.getElementById('driverName').selectedIndex].text,
+                driverId: document.getElementById('driverId').value,
+                driverAge: document.getElementById('driverAge').value,
+            },
+            success: function (res) {
+            },
+            error: function (error) {
+            },
+        });
     });
 });
