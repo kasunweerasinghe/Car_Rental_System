@@ -53,6 +53,7 @@ public class carBookingServlet extends HttpServlet {
             boolean isAdded = bookingDAO.placeBooking(booking);
             if (isAdded) {
                 response.getWriter().write("success");
+                bookingDAO.updateCarAvailability(booking.getCarBrand(), booking.getCarModel(), false);
             } else {
                 response.getWriter().write("error");
             }

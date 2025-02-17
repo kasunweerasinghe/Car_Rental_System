@@ -73,4 +73,24 @@ public class BookingDAO {
         }
         return bookings;
     }
+
+    public boolean updateCarAvailability(String carBrand, String carModel, boolean isAvailable) {
+        String sql = "UPDATE Car SET isAvailable = ? WHERE brand = ? AND model = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setBoolean(1, isAvailable);
+            stmt.setString(2, carBrand);
+            stmt.setString(3, carModel);
+
+            int rowsUpdated = stmt.executeUpdate();
+            return rowsUpdated > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

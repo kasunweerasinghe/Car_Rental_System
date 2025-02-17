@@ -8,14 +8,22 @@ $(document).ready(function () {
             $("#content").show();
             $("#cars-content").hide();
             $("#drivers-content").hide();
+            $("#booking-details-content").hide();
         } else if (selectedTab === "cars-tab") {
             $("#content").hide();
             $("#cars-content").show();
             $("#drivers-content").hide();
+            $("#booking-details-content").hide();
         } else if (selectedTab === "drivers-tab") {
             $("#content").hide();
             $("#cars-content").hide();
             $("#drivers-content").show();
+            $("#booking-details-content").hide();
+        } else if(selectedTab === "booking-details-tab") {
+            $("#content").hide();
+            $("#cars-content").hide();
+            $("#drivers-content").hide();
+            $("#booking-details-content").show();
         }
     });
     // Trigger the dashboard tab by default
