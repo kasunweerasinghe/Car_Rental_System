@@ -17,7 +17,7 @@ import java.sql.SQLException;
 
 public class BookingDetailsDAO {
 
-    // Add a new booking to the database
+    // save checkOut data in DB
     public boolean placeBooking(BookingDetails bookingDetails) {
         String query = "INSERT INTO BookingDetails (bookId, customerName, date, carBrand, carModel, price, Balance, tripStartDate, tripEndDate, driverName, driverId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseConnection.getConnection();

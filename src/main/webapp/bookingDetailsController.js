@@ -1,5 +1,7 @@
 $(document).ready(function () {
     let bookingDetails = [];
+    let checkOutData = [];
+    document.getElementById("confirmCheckout").disabled = true;
 
     loadBookingDetails();
 
@@ -68,8 +70,23 @@ $(document).ready(function () {
                     $("#modalDriverId").text(button.data("driver-id"));
                     $("#modalTotalPrice").text(button.data("total-price"));
 
+                    // Disable confirm button initially
+                    $("#confirmCheckout").prop("disabled", true);
+
                     // Open Bootstrap Modal
                     $("#checkoutModal").modal("show");
+                });
+
+                // Event listener to check amount input
+                $("#amountInput").on("input", function () {
+                    let totalPrice = parseFloat($("#modalTotalPrice").text());
+                    let enteredAmount = parseFloat($(this).val());
+
+                    if (enteredAmount > totalPrice) {
+                        $("#confirmCheckout").prop("disabled", false);
+                    } else {
+                        $("#confirmCheckout").prop("disabled", true);
+                    }
                 });
 
                 // Handle Confirm Checkout Button
@@ -89,6 +106,7 @@ $(document).ready(function () {
         });
     }
 
+    // Helper function to format date
     function formatDate(dateString) {
         const date = new Date(dateString);
         const year = date.getFullYear();
@@ -112,8 +130,6 @@ $(document).ready(function () {
             driverName: $("#modalDriverName").text(),
             driverId: $("#modalDriverId").text(),
         };
-
-        console.log(bookingData)
 
         $.ajax({
             url: "bookingDetails",
