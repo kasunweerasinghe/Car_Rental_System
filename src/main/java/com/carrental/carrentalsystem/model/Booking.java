@@ -20,6 +20,7 @@ public class Booking {
     private String dropLocation;
     private Date startDate;
     private Date endDate;
+    private int totalPrice;
     private String driverName;
     private String driverId;
     private int driverAge;
@@ -27,7 +28,7 @@ public class Booking {
     public Booking() {
     }
 
-    public Booking(String bookingId, String customerName, Date currentDate, String carBrand, String carModel, int price, String pickupLocation, String dropLocation, Date startDate, Date endDate, String driverName, String driverId, int driverAge) {
+    public Booking(String bookingId, String customerName, Date currentDate, String carBrand, String carModel, int price, String pickupLocation, String dropLocation, Date startDate, Date endDate, int totalPrice, String driverName, String driverId, int driverAge) {
         this.bookingId = bookingId;
         this.customerName = customerName;
         this.currentDate = currentDate;
@@ -38,6 +39,7 @@ public class Booking {
         this.dropLocation = dropLocation;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.totalPrice = totalPrice;
         this.driverName = driverName;
         this.driverId = driverId;
         this.driverAge = driverAge;
@@ -121,6 +123,14 @@ public class Booking {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public int getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(int totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public String getDriverName() {

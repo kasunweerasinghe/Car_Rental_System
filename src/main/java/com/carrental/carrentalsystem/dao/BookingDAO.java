@@ -21,7 +21,7 @@ public class BookingDAO {
 
     // Add a new booking to the database
     public boolean placeBooking(Booking booking) {
-        String query = "INSERT INTO Booking (bookId, customerName, date, carBrand, carModel, price, pickupLocation, dropLocation, tripStartDate, tripEndDate, driverName, driverId, driverAge) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Booking (bookId, customerName, date, carBrand, carModel, price, pickupLocation, dropLocation, tripStartDate, tripEndDate, totalPrice, driverName, driverId, driverAge) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, booking.getBookingId());
@@ -34,9 +34,10 @@ public class BookingDAO {
             preparedStatement.setString(8, booking.getDropLocation());
             preparedStatement.setDate(9, booking.getStartDate());
             preparedStatement.setDate(10, booking.getEndDate());
-            preparedStatement.setString(11, booking.getDriverName());
-            preparedStatement.setString(12, booking.getDriverId());
-            preparedStatement.setInt(13, booking.getDriverAge());
+            preparedStatement.setInt(11, booking.getTotalPrice());
+            preparedStatement.setString(12, booking.getDriverName());
+            preparedStatement.setString(13, booking.getDriverId());
+            preparedStatement.setInt(14, booking.getDriverAge());
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -63,6 +64,7 @@ public class BookingDAO {
                 booking.setDropLocation(resultSet.getString("dropLocation"));
                 booking.setStartDate(resultSet.getDate("tripStartDate"));
                 booking.setEndDate(resultSet.getDate("tripEndDate"));
+                booking.setTotalPrice(resultSet.getInt("totalPrice"));
                 booking.setDriverName(resultSet.getString("driverName"));
                 booking.setDriverId(resultSet.getString("driverId"));
                 booking.setDriverAge(resultSet.getInt("driverAge"));
@@ -74,6 +76,7 @@ public class BookingDAO {
         return bookings;
     }
 
+    // Update car availability
     public boolean updateCarAvailability(String carBrand, String carModel, boolean isAvailable) {
         String sql = "UPDATE Car SET isAvailable = ? WHERE brand = ? AND model = ?";
 
@@ -84,6 +87,24 @@ public class BookingDAO {
             stmt.setString(2, carBrand);
             stmt.setString(3, carModel);
 
+            int rowsUpdated = stmt.executeUpdate();
+            return rowsUpdated > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    //update Driver availability
+    public boolean updateDriverAvailability(String driverId, boolean isAvailable) {
+        String sql = "UPDATE Driver SET isDriverAvailable = ? WHERE driverId = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setBoolean(1, isAvailable);
+            stmt.setString(2, driverId);
             int rowsUpdated = stmt.executeUpdate();
             return rowsUpdated > 0;
 

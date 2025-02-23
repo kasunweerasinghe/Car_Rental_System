@@ -9,6 +9,7 @@ package com.carrental.carrentalsystem.controller;
 
 import com.carrental.carrentalsystem.dao.BookingDAO;
 import com.carrental.carrentalsystem.dao.CarDAO;
+import com.carrental.carrentalsystem.dao.DriverDAO;
 import com.carrental.carrentalsystem.model.Booking;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -38,6 +39,7 @@ public class carBookingServlet extends HttpServlet {
             String dropLocation = request.getParameter("dropLocation");
             String startDateStr = request.getParameter("startDate");
             String endDateStr = request.getParameter("endDate");
+            int totalPrice = Integer.parseInt(request.getParameter("totalPrice"));
             String driverName = request.getParameter("driverName");
             String driverId = request.getParameter("driverId");
             int driverAge = Integer.parseInt(request.getParameter("driverAge"));
@@ -48,12 +50,13 @@ public class carBookingServlet extends HttpServlet {
             java.sql.Date endDate = java.sql.Date.valueOf(endDateStr);
 
             Booking booking = new Booking(carId, customerName, currentDate, carBrand, carModel, price, pickupLocation,
-                    dropLocation, startDate, endDate, driverName, driverId, driverAge);
+                    dropLocation, startDate, endDate, totalPrice, driverName, driverId, driverAge);
 
             boolean isAdded = bookingDAO.placeBooking(booking);
             if (isAdded) {
                 response.getWriter().write("success");
                 bookingDAO.updateCarAvailability(booking.getCarBrand(), booking.getCarModel(), false);
+                bookingDAO.updateDriverAvailability(booking.getDriverId(), false);
             } else {
                 response.getWriter().write("error");
             }

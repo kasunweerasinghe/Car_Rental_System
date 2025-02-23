@@ -1,12 +1,12 @@
 $(document).ready(function () {
     let bookings = [];
-    // document.getElementById("bookingBtn").disabled = true;
+
     const $carBrandSelect = $("#carBrand");
     const $carModelSelect = $("#carModel");
     const $pricePerDayInput = $("#pricePerDay");
 
-    loadBookings();
     generateBookingID();
+    loadBookings();
     getCurrentDate();
     getCurrentLoggedUserName();
     loadCarBrands();
@@ -28,8 +28,52 @@ $(document).ready(function () {
         }
     });
 
+    $("#startDate, #endDate").change(function () {
+        const startDate = $("#startDate").val();
+        const endDate = $("#endDate").val();
+
+        if (startDate && endDate) {
+            calculateTotalPrice(startDate, endDate);
+        }
+    });
+
     // Initialize form validation
     $("#bookingForm input, #bookingForm select").on("input change", validateForm);
+
+    // car book
+    $("#bookingForm").submit(function (event) {
+        event.preventDefault();
+
+        $.ajax({
+            url: "booking",
+            type: "POST",
+            data: {
+                bookingId: document.getElementById('bookingId').value,
+                customerName: document.getElementById('customerName').value,
+                currentDate: document.getElementById('currentDate').value,
+                carBrand: document.getElementById('carBrand').value,
+                carModel: document.getElementById('carModel').value,
+                price: document.getElementById('pricePerDay').value,
+                pickupLocation: document.getElementById('pickupLocation').value,
+                dropLocation: document.getElementById('dropLocation').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value,
+                totalPrice: document.getElementById('totalPrice').value,
+                driverName: document.getElementById('driverName').options[document.getElementById('driverName').selectedIndex].text,
+                driverId: document.getElementById('driverId').value,
+                driverAge: document.getElementById('driverAge').value,
+            },
+            success: function (res) {
+                loadBookings();
+                generateBookingID();
+                $("#bookingForm")[0].reset();
+            },
+            error: function (error) {
+                let cause = JSON.parse(error.responseText).message;
+                alert(cause);
+            },
+        });
+    });
 
     // When brand changes, load models for that brand
     $carBrandSelect.change(function () {
@@ -220,7 +264,7 @@ $(document).ready(function () {
         $("#bookingForm input").each(function () {
             if ($(this).prop("disabled") === false && $(this).val().trim() === "") {
                 isValid = false;
-                return false; // Break the loop
+                return false;
             }
         });
 
@@ -228,47 +272,13 @@ $(document).ready(function () {
         $("#bookingForm select").each(function () {
             if ($(this).val() === null || $(this).val() === "") {
                 isValid = false;
-                return false; // Break the loop
+                return false;
             }
         });
 
         // Enable or disable the button based on validation
         $("#bookingBtn").prop("disabled", !isValid);
     }
-
-    // car book
-    $("#bookingForm").submit(function (event) {
-        event.preventDefault();
-
-        $.ajax({
-            url: "booking",
-            type: "POST",
-            data: {
-                bookingId: document.getElementById('bookingId').value,
-                customerName: document.getElementById('customerName').value,
-                currentDate: document.getElementById('currentDate').value,
-                carBrand: document.getElementById('carBrand').value,
-                carModel: document.getElementById('carModel').value,
-                price: document.getElementById('pricePerDay').value,
-                pickupLocation: document.getElementById('pickupLocation').value,
-                dropLocation: document.getElementById('dropLocation').value,
-                startDate: document.getElementById('startDate').value,
-                endDate: document.getElementById('endDate').value,
-                driverName: document.getElementById('driverName').options[document.getElementById('driverName').selectedIndex].text,
-                driverId: document.getElementById('driverId').value,
-                driverAge: document.getElementById('driverAge').value,
-            },
-            success: function (res) {
-                console.log(res)
-                $("#bookingForm")[0].reset();
-                generateBookingID();
-            },
-            error: function (error) {
-                let cause = JSON.parse(error.responseText).message;
-                alert(cause);
-            },
-        });
-    });
 
     // load all bookings
     function loadBookings() {
@@ -287,7 +297,32 @@ $(document).ready(function () {
                            <td>${booking.driverAge}</td></tr>`;
                     $("#bookingDataList").append(row);
                 }
+
+                generateBookingID();
             }
         });
+    }
+
+    // Calculate total price
+    function calculateTotalPrice(startDate, endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+        if (isNaN(start) || isNaN(end) || start > end) {
+            $("#totalPrice").val("");
+            console.log("Invalid date range");
+            return;
+        }
+
+        const differenceInTime = end - start;
+        const differenceInDays = Math.ceil(differenceInTime / (1000 * 60 * 60 * 24));
+
+
+        // Get price per day
+        const pricePerDay = parseFloat(document.getElementById('pricePerDay').value) || 0;
+        const TripTotalPrice = differenceInDays * pricePerDay;
+        $("#totalPrice").val(TripTotalPrice);
+
+
     }
 });
