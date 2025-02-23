@@ -1,6 +1,5 @@
 $(document).ready(function () {
     let bookingDetails = [];
-    let checkOutData = [];
     document.getElementById("confirmCheckout").disabled = true;
 
     loadBookingDetails();
@@ -53,6 +52,8 @@ $(document).ready(function () {
                 </tr>`;
                     $("#bookingDetailsList").append(row);
                 }
+
+                disableCheckedOutButtons();
 
                 // Attach event listener for checkout button
                 $(".checkout-btn").click(function () {
@@ -139,12 +140,43 @@ $(document).ready(function () {
             success: function (response) {
                 if (response === "success") {
                     alert("Checkout Successful!");
+                    let bookingId = bookingData.bookingId;
+                    let checkedOutBookings = JSON.parse(localStorage.getItem("checkedOutBookings") || "[]");
+
+                    if (!checkedOutBookings.includes(bookingId)) {
+                        checkedOutBookings.push(bookingId);
+                        localStorage.setItem("checkedOutBookings", JSON.stringify(checkedOutBookings));
+                    }
+
+                    // Call the function to disable the button immediately
+                    disableCheckedOutButtons();
                 } else {
                     alert("Checkout Failed!");
                 }
             },
             error: function () {
                 alert("Error processing checkout.");
+            }
+        });
+    }
+
+    function disableCheckedOutButtons() {
+        let checkedOutBookings = JSON.parse(localStorage.getItem("checkedOutBookings")) || [];
+
+        console.log("Checked-out bookings from localStorage:", checkedOutBookings);
+
+        checkedOutBookings.forEach(bookingId => {
+            let button = $(`button[data-booking-id="${bookingId}"]`);
+            console.log(`Checking button for booking ID: ${bookingId} - Found:`, button.length);
+
+            if (button.length) {
+                console.log(`Disabling button for booking ID: ${bookingId}`);
+                button.prop("disabled", true)
+                    .removeClass("btn-danger")
+                    .addClass("btn-secondary")
+                    .text("Checked Out");
+            } else {
+                console.warn(`Button not found for booking ID: ${bookingId}`);
             }
         });
     }
