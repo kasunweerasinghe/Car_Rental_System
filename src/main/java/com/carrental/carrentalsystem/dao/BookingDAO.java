@@ -77,7 +77,7 @@ public class BookingDAO {
     }
 
     // Update car availability
-    public boolean updateCarAvailability(String carBrand, String carModel, boolean isAvailable) {
+    public void updateCarAvailability(String carBrand, String carModel, boolean isAvailable) {
         String sql = "UPDATE Car SET isAvailable = ? WHERE brand = ? AND model = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -88,29 +88,25 @@ public class BookingDAO {
             stmt.setString(3, carModel);
 
             int rowsUpdated = stmt.executeUpdate();
-            return rowsUpdated > 0;
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
     //update Driver availability
-    public boolean updateDriverAvailability(String driverId, boolean isAvailable) {
+    public void updateDriverAvailability(String driverId, boolean isDriverAvailable) {
         String sql = "UPDATE Driver SET isDriverAvailable = ? WHERE driverId = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setBoolean(1, isAvailable);
+            stmt.setBoolean(1, isDriverAvailable);
             stmt.setString(2, driverId);
             int rowsUpdated = stmt.executeUpdate();
-            return rowsUpdated > 0;
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
