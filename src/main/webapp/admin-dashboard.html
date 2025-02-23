@@ -199,12 +199,50 @@
     </div>
 </div>
 
+<!-- Checkout Modal -->
+<div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="checkoutModalLabel">Checkout Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Booking ID:</strong> <span id="modalBookingId"></span></p>
+                <p><strong>Customer Name:</strong> <span id="modalCustomerName"></span></p>
+                <p><strong>Booking Date:</strong> <span id="modalCurrentDate"></span></p>
+                <p><strong>Car:</strong> <span id="modalCarBrand"></span> - <span id="modalCarModel"></span></p>
+                <p><strong>Rental Period:</strong> <span id="modalStartDate"></span> to <span id="modalEndDate"></span></p>
+                <p><strong>Driver:</strong> <span id="modalDriverName"></span> (ID: <span id="modalDriverId"></span>)</p>
+                <p><strong>Total Price:</strong> Rs. <span id="modalTotalPrice"></span></p>
+
+                <div style="display: flex; gap: 10px" class="mb-3">
+                    <div class="col-4">
+                        <label for="amountInput" class="form-label"><strong>Enter Amount:</strong></label>
+                        <input type="number" class="form-control" id="amountInput" placeholder="Enter amount">
+                    </div>
+                    <div class="col-4">
+                        <label for="balanceAmount" class="form-label"><strong>Balance:</strong></label>
+                        <input type="number" class="form-control" id="balanceAmount" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmCheckout">Confirm Checkout</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script src="admindashboardController.js"></script>
 <script src="carController.js"></script>
 <script src="driverController.js"></script>
+<script src="bookingDetailsController.js"></script>
 
 </body>
 </html>
