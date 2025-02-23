@@ -82,31 +82,54 @@ $(document).ready(function () {
                         return;
                     }
 
-                    handleCheckout(bookingId, amount);
+                    handleCheckout();
                     $("#checkoutModal").modal("hide");
                 });
             }
         });
     }
 
-    // Function to handle checkout action
-    function handleCheckout(bookingId, amount) {
-        console.log("Checked out Booking ID:", bookingId);
-        console.log("Amount Entered:", amount);
-
-        // Example: You can send the amount to the backend via AJAX
-        // $.ajax({
-        //     url: "checkoutBooking",
-        //     type: "POST",
-        //     data: { bookingId: bookingId, amount: amount },
-        //     success: function (response) {
-        //         alert("Checkout Successful!");
-        //         location.reload(); // Reload the page after successful checkout
-        //     },
-        //     error: function () {
-        //         alert("Error processing checkout.");
-        //     }
-        // });
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     }
 
+    // Function to handle checkout action
+    function handleCheckout() {
+        let bookingData = {
+            bookingId: $("#modalBookingId").text(),
+            customerName: $("#modalCustomerName").text(),
+            currentDate: formatDate($("#modalCurrentDate").text()),
+            carBrand: $("#modalCarBrand").text(),
+            carModel: $("#modalCarModel").text(),
+            totalPrice: parseInt($("#modalTotalPrice").text()),
+            balance: parseInt($("#balanceAmount").val()),
+            startDate: formatDate($("#modalStartDate").text()),
+            endDate: formatDate($("#modalEndDate").text()),
+            driverName: $("#modalDriverName").text(),
+            driverId: $("#modalDriverId").text(),
+        };
+
+        console.log(bookingData)
+
+        $.ajax({
+            url: "bookingDetails",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(bookingData),
+            success: function (response) {
+                if (response === "success") {
+                    alert("Checkout Successful!");
+                } else {
+                    alert("Checkout Failed!");
+                }
+            },
+            error: function () {
+                alert("Error processing checkout.");
+            }
+        });
+    }
 });
