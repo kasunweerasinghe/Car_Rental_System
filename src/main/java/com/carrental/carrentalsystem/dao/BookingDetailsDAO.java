@@ -34,9 +34,6 @@ public class BookingDetailsDAO {
             preparedStatement.setString(10, bookingDetails.getDriverName());
             preparedStatement.setString(11, bookingDetails.getDriverId());
 
-            // Log the SQL query and parameters
-            System.out.println("Executing SQL: " + preparedStatement.toString());
-
             int rowsAffected = preparedStatement.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {

@@ -37,7 +37,6 @@ public class CarDataToBookingServlet extends HttpServlet {
             // Creating a HashMap to return price in JSON format
             Map<String, Integer> priceMap = new HashMap<>();
             priceMap.put("price", price);
-            System.out.println(priceMap);
 
             String json = new Gson().toJson(priceMap);
             response.getWriter().write(json);

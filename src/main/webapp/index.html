@@ -78,7 +78,6 @@
                             role: response
                         };
                         localStorage.setItem("currentUser", JSON.stringify(userData));
-                        console.log(userData)
 
                         let redirectPage = response === "admin" ? "admin-dashboard.html" : "customer-dashboard.html";
                         window.location.href = redirectPage;

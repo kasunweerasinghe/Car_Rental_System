@@ -64,6 +64,7 @@ $(document).ready(function () {
                 driverAge: document.getElementById('driverAge').value,
             },
             success: function (res) {
+                alert("Booking successful!");
                 loadBookings();
                 generateBookingID();
                 $("#bookingForm")[0].reset();
@@ -310,7 +311,6 @@ $(document).ready(function () {
 
         if (isNaN(start) || isNaN(end) || start > end) {
             $("#totalPrice").val("");
-            console.log("Invalid date range");
             return;
         }
 

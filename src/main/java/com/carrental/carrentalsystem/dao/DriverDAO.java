@@ -31,7 +31,6 @@ public class DriverDAO {
             preparedStatement.setInt(4, driver.getDriverAge());
             preparedStatement.setString(5, driver.getDriverNationalId());
             preparedStatement.setBoolean(6, driver.isDriverAvailable());
-            System.out.println(query);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();

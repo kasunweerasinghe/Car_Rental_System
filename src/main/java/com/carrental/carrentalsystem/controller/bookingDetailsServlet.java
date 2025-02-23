@@ -44,9 +44,6 @@ public class bookingDetailsServlet extends HttpServlet {
         Gson gson = new Gson();
         JsonObject jsonObject = gson.fromJson(jsonBuffer.toString(), JsonObject.class);
 
-        // Log the received JSON data
-        System.out.println("Received JSON: " + jsonObject.toString());
-
         String bookingId = jsonObject.get("bookingId").getAsString();
         String customerName = jsonObject.get("customerName").getAsString();
         String currentDateStr = jsonObject.get("currentDate").getAsString();

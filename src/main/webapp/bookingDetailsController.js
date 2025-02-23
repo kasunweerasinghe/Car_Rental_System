@@ -163,20 +163,16 @@ $(document).ready(function () {
     function disableCheckedOutButtons() {
         let checkedOutBookings = JSON.parse(localStorage.getItem("checkedOutBookings")) || [];
 
-        console.log("Checked-out bookings from localStorage:", checkedOutBookings);
-
         checkedOutBookings.forEach(bookingId => {
             let button = $(`button[data-booking-id="${bookingId}"]`);
-            console.log(`Checking button for booking ID: ${bookingId} - Found:`, button.length);
 
             if (button.length) {
-                console.log(`Disabling button for booking ID: ${bookingId}`);
                 button.prop("disabled", true)
                     .removeClass("btn-danger")
                     .addClass("btn-secondary")
                     .text("Checked Out");
             } else {
-                console.warn(`Button not found for booking ID: ${bookingId}`);
+                alert("Invalid booking ID: " + bookingId);
             }
         });
     }
