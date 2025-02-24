@@ -1,6 +1,7 @@
 $(document).ready(function () {
     let bookingDetails = [];
     document.getElementById("confirmCheckout").disabled = true;
+    // document.getElementsByClassName("download-btn").disabled = true;
 
     loadBookingDetails();
 
@@ -56,12 +57,33 @@ $(document).ready(function () {
                             data-driver-id="${bookingData.driverId}">
                             Checkout
                         </button>
+                        <button class="btn btn-info download-btn"><i class="bi bi-download"></i></button>
                     </td>
                 </tr>`;
                     $("#bookingDetailsList").append(row);
                 }
 
                 disableCheckedOutButtons();
+
+                // Attach event listener for download button
+                $(".download-btn").click(function () {
+                    let row = $(this).closest("tr");
+
+                    let bookingData = {
+                        bookingId: row.find("td:eq(0)").text(),
+                        customerName: row.find("td:eq(1)").text(),
+                        currentDate: row.find("td:eq(2)").text(),
+                        carBrand: row.find("td:eq(3)").text(),
+                        carModel: row.find("td:eq(4)").text(),
+                        totalPrice: row.find("td:eq(5)").text(),
+                        startDate: row.find("td:eq(6)").text(),
+                        endDate: row.find("td:eq(7)").text(),
+                        driverName: row.find("td:eq(8)").text(),
+                    };
+
+                    let queryString = $.param(bookingData);
+                    window.location.href = "DownloadBillServlet?" + queryString;
+                });
 
                 // Attach event listener for checkout button
                 $(".checkout-btn").click(function () {
@@ -171,17 +193,32 @@ $(document).ready(function () {
     function disableCheckedOutButtons() {
         let checkedOutBookings = JSON.parse(localStorage.getItem("checkedOutBookings")) || [];
 
-        checkedOutBookings.forEach(bookingId => {
-            let button = $(`button[data-booking-id="${bookingId}"]`);
+        $("#bookingDetailsList tr").each(function () {
+            let checkoutButton = $(this).find(".checkout-btn");
+            let downloadButton = $(this).find(".download-btn");
 
-            if (button.length) {
-                button.prop("disabled", true)
-                    .removeClass("btn-danger")
-                    .addClass("btn-secondary")
-                    .text("Checked Out");
-            } else {
-                alert("Invalid booking ID: " + bookingId);
+            if (checkoutButton.length) {
+                let bookingId = checkoutButton.data("booking-id");
+
+                if (checkedOutBookings.includes(bookingId)) {
+                    // If booking is checked out, disable checkout and enable download
+                    checkoutButton.prop("disabled", true)
+                        .removeClass("btn-danger")
+                        .addClass("btn-secondary")
+                        .text("Checked Out");
+
+                    downloadButton.prop("disabled", false);
+                } else {
+                    // If booking is not checked out, enable checkout and disable download
+                    checkoutButton.prop("disabled", false)
+                        .removeClass("btn-secondary")
+                        .addClass("btn-danger")
+                        .text("Checkout");
+
+                    downloadButton.prop("disabled", true);
+                }
             }
         });
     }
+
 });
