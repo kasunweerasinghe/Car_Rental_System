@@ -18,47 +18,53 @@ import java.sql.SQLException;
 public class UserDAO {
 
     public boolean insertUser(User user) {
-        String query = "INSERT INTO Customer (username, password, email, role) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO User (username, password, email, role) VALUES (?, ?, ?, ?)";
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            preparedStatement.setString(1, user.getUsername());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setString(3, user.getEmail());
-            preparedStatement.setString(4, user.getRole());
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getPassword());
+            stmt.setString(3, user.getEmail());
+            stmt.setString(4, user.getRole());
 
-            return preparedStatement.executeUpdate() > 0;
+            int rowsInserted = stmt.executeUpdate();
+            return rowsInserted > 0;
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Log error
+            return false;
         }
-        return false;
     }
+
 
     public User getUserByUsernameAndPassword(String username, String password) {
-        User user = null;
-        String query = "SELECT * FROM Customer WHERE username = ? AND password = ?";
+        String query = "SELECT * FROM User WHERE username = ? AND password = ?";
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, password);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            stmt.setString(1, username);
+            stmt.setString(2, password);
 
-            if (resultSet.next()) {
-                user = new User(
-                        resultSet.getInt("id"),
-                        resultSet.getString("username"),
-                        resultSet.getString("password"),
-                        resultSet.getString("email"),
-                        "customer"
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new User(
+                        rs.getInt("userId"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("role")
                 );
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return user;
+
+        return null;
     }
+
 
 }
