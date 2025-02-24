@@ -177,7 +177,7 @@ $(document).ready(function () {
         });
     }
 
-    //Customer Search Bar
+    //Booking Details Search Bar
     $('#orderDetailInput').on('keyup', function () {
         let value = $(this).val().toLowerCase();
         $('#bookingDetailsList>tr').filter(function () {

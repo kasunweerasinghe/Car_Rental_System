@@ -130,6 +130,14 @@ $(document).ready(function () {
         generateCarID();
     });
 
+    //Car Register Search Bar
+    $('#carRegisterInput').on('keyup', function () {
+        let value = $(this).val().toLowerCase();
+        $('#carList>tr').filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
     // Load cars on page load
     function loadCars() {
         $("#carList").empty();
