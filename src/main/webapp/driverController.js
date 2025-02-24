@@ -129,6 +129,14 @@ $(document).ready(function () {
         generateDriverID();
     });
 
+    //Car Register Search Bar
+    $('#driverRegisterInput').on('keyup', function () {
+        let value = $(this).val().toLowerCase();
+        $('#driverList>tr').filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
     // Load drivers on page load
     function loadDrivers() {
         $("#driverList").empty();

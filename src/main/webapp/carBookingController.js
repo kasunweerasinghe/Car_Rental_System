@@ -76,6 +76,14 @@ $(document).ready(function () {
         });
     });
 
+    //Booking Details Search Bar
+    $('#bookingDetailInput').on('keyup', function () {
+        let value = $(this).val().toLowerCase();
+        $('#bookingDataList>tr').filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
     // When brand changes, load models for that brand
     $carBrandSelect.change(function () {
         const selectedBrand = $(this).val();

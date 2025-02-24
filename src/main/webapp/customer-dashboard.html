@@ -121,7 +121,13 @@
 <!-- Booking Details Section -->
 <div id="booking-details-content" class="mt-4">
     <h1 class="text-center text-primary">Booking Details</h1>
+    <section class="row mb-3 container-fluid">
+        <form class="d-flex col-5" role="search">
+            <input aria-label="Search" class="form-control me-2 " id="bookingDetailInput" placeholder="Search"
+                   type="search">
+        </form>
 
+    </section>
     <div class="table-responsive">
         <table class="table table-bordered table-hover">
             <thead class="table-dark">
@@ -147,8 +153,6 @@
         </table>
     </div>
 </div>
-<div id="alertContainer"></div>
-
 
 <script src="customerDashboardController.js"></script>
 <script src="carBookingController.js"></script>
