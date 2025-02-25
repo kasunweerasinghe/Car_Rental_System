@@ -11,38 +11,151 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 </head>
-<body>
+<body class="container mt-4">
 
-<h1>Customer Dashboard</h1>
-<form id="logoutForm">
-    <button type="submit">Log Out</button>
-</form>
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">Customer Dashboard</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#" id="booking-tab">Booking</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" id="booking-details-tab">Booking Details</a></li>
+            </ul>
+            <form action="logout" method="get">
+                <button type="submit" class="btn btn-danger">Log Out</button>
+            </form>
+        </div>
+    </div>
+</nav>
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $("#logoutForm").on("submit", function(event) {
-            event.preventDefault(); // Prevent default form submission
+<!-- Booking Section -->
+<div id="booking-content" class="mt-4">
+    <div class="card shadow p-4">
+        <h2 class="text-center text-primary">Book a Car</h2>
+        <form id="bookingForm">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="bookingId" class="form-label">Booking ID</label>
+                    <input type="text" class="form-control" id="bookingId" disabled>
+                </div>
+                <div class="col-md-4">
+                    <label for="customerName" class="form-label">Customer Name</label>
+                    <input type="text" class="form-control" id="customerName" disabled>
+                </div>
+                <div class="col-md-4">
+                    <label for="currentDate" class="form-label">Date</label>
+                    <input aria-label="Date" class="form-control" id="currentDate" type="date" disabled>
+                </div>
+            </div>
 
-            $.ajax({
-                url: "logout",
-                type: "GET",
-                success: function(response, status, xhr) {
-                    if (xhr.status === 200) {
-                        window.location.href = "index.html";
-                    } else {
-                        console.error("Logout request failed.");
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Logout failed:", error);
-                }
-            });
-        });
-    });
-</script>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="carBrand" class="form-label">Car Brand</label>
+                    <select class="form-select" id="carBrand"></select>
+                </div>
+                <div class="col-md-4">
+                    <label for="carModel" class="form-label">Car Model</label>
+                    <select class="form-select" id="carModel"></select>
+                </div>
+                <div class="col-md-4">
+                    <label for="pricePerDay" class="form-label">Car Price(per day)</label>
+                    <input type="number" class="form-control" id="pricePerDay" disabled>
+                </div>
+            </div>
 
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="pickupLocation" class="form-label">Pickup Location</label>
+                    <select class="form-select" id="pickupLocation"></select>
+                </div>
+                <div class="col-md-4">
+                    <label for="dropLocation" class="form-label">Drop Location</label>
+                    <select class="form-select" id="dropLocation"></select>
+                </div>
+                <div class="col-md-4">
+                    <label for="startDate" class="form-label">Trip Start Date</label>
+                    <input aria-label="Date" class="form-control" id="startDate" type="date">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="endDate" class="form-label">Trip End Date</label>
+                    <input aria-label="Date" class="form-control" id="endDate" type="date">
+                </div>
+                <div class="col-md-4">
+                    <label for="totalPrice" class="form-label">Total Price</label>
+                    <input type="text" class="form-control" id="totalPrice" disabled>
+                </div>
+                <div class="col-md-4">
+                    <label for="driverName" class="form-label">Select Driver</label>
+                    <select class="form-select" id="driverName"></select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="driverId" class="form-label">Driver ID</label>
+                    <input type="text" class="form-control" id="driverId" disabled>
+                </div>
+                <div class="col-md-4">
+                    <label for="driverAge" class="form-label">Driver Age</label>
+                    <input type="text" class="form-control" id="driverAge" disabled>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary" id="bookingBtn">Book Now</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Booking Details Section -->
+<div id="booking-details-content" class="mt-4">
+    <h1 class="text-center text-primary">Booking Details</h1>
+    <section class="row mb-3 container-fluid">
+        <form class="d-flex col-5" role="search">
+            <input aria-label="Search" class="form-control me-2 " id="bookingDetailInput" placeholder="Search"
+                   type="search">
+        </form>
+
+    </section>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>Booking ID</th>
+                <th>Customer Name</th>
+                <th>Date</th>
+                <th>Car Brand</th>
+                <th>Car Model</th>
+                <th>Price</th>
+                <th>pickup Location</th>
+                <th>Drop Location</th>
+                <th>Trip Start Date</th>
+                <th>Trip End Date</th>
+                <th>Driver Name</th>
+                <th>Driver ID</th>
+                <th>Driver Age</th>
+            </tr>
+            </thead>
+            <tbody id="bookingDataList">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="customerDashboardController.js"></script>
+<script src="carBookingController.js"></script>
 
 </body>
 </html>
