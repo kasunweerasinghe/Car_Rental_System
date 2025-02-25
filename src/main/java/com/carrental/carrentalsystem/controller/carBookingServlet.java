@@ -8,11 +8,8 @@
 package com.carrental.carrentalsystem.controller;
 
 import com.carrental.carrentalsystem.dao.BookingDAO;
-import com.carrental.carrentalsystem.dao.CarDAO;
-import com.carrental.carrentalsystem.dao.DriverDAO;
 import com.carrental.carrentalsystem.model.Booking;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

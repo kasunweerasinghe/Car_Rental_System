@@ -7,9 +7,7 @@
 
 package com.carrental.carrentalsystem.controller;
 
-import com.carrental.carrentalsystem.dao.CarDAO;
 import com.carrental.carrentalsystem.dao.DriverDAO;
-import com.carrental.carrentalsystem.model.Car;
 import com.carrental.carrentalsystem.model.Driver;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
