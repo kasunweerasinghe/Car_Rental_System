@@ -6,6 +6,7 @@ $(document).ready(function () {
         if(selectedTab==="booking-tab"){
             $("#booking-content").show();
             $("#booking-details-content").hide();
+            // generateCarID();
         } else if(selectedTab==="booking-details-tab") {
             $("#booking-content").hide();
             $("#booking-details-content").show();

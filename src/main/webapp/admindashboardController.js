@@ -8,18 +8,32 @@ $(document).ready(function () {
             $("#content").show();
             $("#cars-content").hide();
             $("#drivers-content").hide();
+            $("#booking-details-content").hide();
+            $("#checkout-data").hide();
         } else if (selectedTab === "cars-tab") {
             $("#content").hide();
             $("#cars-content").show();
             $("#drivers-content").hide();
-            generateCarID();
-            // Trigger the dashboard tab by default
-            $("#dashboard-tab").click();
+            $("#booking-details-content").hide();
+            $("#checkout-data").hide();
         } else if (selectedTab === "drivers-tab") {
             $("#content").hide();
             $("#cars-content").hide();
             $("#drivers-content").show();
-            generateDriverID();
+            $("#booking-details-content").hide();
+            $("#checkout-data").hide();
+        } else if(selectedTab === "booking-details-tab") {
+            $("#content").hide();
+            $("#cars-content").hide();
+            $("#drivers-content").hide();
+            $("#booking-details-content").show();
+            $("#checkout-data").hide();
+        } else if(selectedTab === "checkout-data-tab") {
+            $("#content").hide();
+            $("#cars-content").hide();
+            $("#drivers-content").hide();
+            $("#booking-details-content").hide();
+            $("#checkout-data").show();
         }
     });
     // Trigger the dashboard tab by default
