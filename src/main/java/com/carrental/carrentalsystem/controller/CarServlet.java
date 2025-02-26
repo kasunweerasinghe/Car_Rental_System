@@ -7,7 +7,7 @@
 
 package com.carrental.carrentalsystem.controller;
 
-import com.carrental.carrentalsystem.dao.CarDAOImpl;
+import com.carrental.carrentalsystem.dao.CarDAO;
 import com.carrental.carrentalsystem.model.Car;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -24,7 +24,7 @@ import java.io.PrintWriter;
 
 @WebServlet("/car")
 public class CarServlet extends HttpServlet {
-    private CarDAOImpl carDAO = new CarDAOImpl();
+    private CarDAO carDAO = new CarDAO();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

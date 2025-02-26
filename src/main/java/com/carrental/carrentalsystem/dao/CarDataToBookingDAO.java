@@ -20,14 +20,18 @@ public class CarDataToBookingDAO {
         List<String> brands = new ArrayList<>();
         String query = "SELECT DISTINCT brand FROM Car WHERE isAvailable = 1";
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        try {
+            DatabaseConnection dbConnection = DatabaseConnection.getInstance();
+            Connection connection = dbConnection.getConnection();
 
-            while (rs.next()) {
-                brands.add(rs.getString("brand"));
+            try (Statement stmt = connection.createStatement();
+                 ResultSet rs = stmt.executeQuery(query)) {
+
+                while (rs.next()) {
+                    brands.add(rs.getString("brand"));
+                }
+
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -39,16 +43,20 @@ public class CarDataToBookingDAO {
         List<String> models = new ArrayList<>();
         String query = "SELECT model FROM Car WHERE brand = ?";
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        try {
+            DatabaseConnection dbConnection = DatabaseConnection.getInstance();
+            Connection connection = dbConnection.getConnection();
 
-            stmt.setString(1, brand);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    models.add(rs.getString("model"));
+            try (PreparedStatement stmt = connection.prepareStatement(query)) {
+
+                stmt.setString(1, brand);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        models.add(rs.getString("model"));
+                    }
                 }
-            }
 
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -59,21 +67,25 @@ public class CarDataToBookingDAO {
     public int getCarPrice(String brand, String model) {
         String query = "SELECT price FROM Car WHERE brand = ? AND model = ?";
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        try {
+            DatabaseConnection dbConnection = DatabaseConnection.getInstance();
+            Connection connection = dbConnection.getConnection();
 
-            stmt.setString(1, brand);
-            stmt.setString(2, model);
-            ResultSet rs = stmt.executeQuery();
+            try (PreparedStatement stmt = connection.prepareStatement(query)) {
 
-            if (rs.next()) {
-                return rs.getInt("price");
+                stmt.setString(1, brand);
+                stmt.setString(2, model);
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    return rs.getInt("price");
+                }
+
             }
-
         } catch (SQLException e) {
-            e.printStackTrace();  // Log error in server console
+            e.printStackTrace();
         }
-        return 0;  // Default to 0 if price not found
+        return 0;
     }
 
 }

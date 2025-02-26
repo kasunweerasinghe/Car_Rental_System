@@ -16,12 +16,30 @@ public class DatabaseConnection {
     private static final String USER = "root";
     private static final String PASSWORD = "Kasun2023..";
 
-    public static Connection getConnection() throws SQLException {
+    // Singleton instance
+    private static DatabaseConnection instance;
+    private Connection connection;
+
+    // Private constructor to prevent instantiation
+    private DatabaseConnection() throws SQLException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            return DriverManager.getConnection(URL, USER, PASSWORD);
+            this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (ClassNotFoundException e) {
             throw new SQLException("MySQL JDBC Driver not found", e);
         }
+    }
+
+    // Global access point to the Singleton instance
+    public static DatabaseConnection getInstance() throws SQLException {
+        if (instance == null) {
+            instance = new DatabaseConnection();
+        }
+        return instance;
+    }
+
+    // Method to get the database connection
+    public Connection getConnection() {
+        return connection;
     }
 }
