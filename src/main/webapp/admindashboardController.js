@@ -1,4 +1,27 @@
 $(document).ready(function () {
+
+    $('#addCarBtn').click(function () {
+        $(".nav-link").removeClass("active");
+        $("#cars-tab").addClass("active");
+
+        $("#content").hide();
+        $("#cars-content").show();
+        $("#drivers-content").hide();
+        $("#booking-details-content").hide();
+        $("#checkout-data").hide();
+    });
+
+    $('#addDriverBtn').click(function () {
+        $(".nav-link").removeClass("active");
+        $("#drivers-tab").addClass("active");
+
+        $("#content").hide();
+        $("#cars-content").hide();
+        $("#drivers-content").show();
+        $("#booking-details-content").hide();
+        $("#checkout-data").hide();
+    });
+
     // Handle tab s witching and showing content
     $(".nav-link").click(function () {
         $(".nav-link").removeClass("active");
