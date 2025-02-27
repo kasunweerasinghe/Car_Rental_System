@@ -1,15 +1,18 @@
 /**
  * created by kasun weerasinghe
  * Date: 2/27/25
- * Time: 5:52 PM
+ * Time: 6:42 PM
  * Project Name: CarRentalSystem
  */
 
 package controller;
 
+
 import com.carrental.carrentalsystem.controller.CarServlet;
-import com.carrental.carrentalsystem.dao.CarDAO;
+import com.carrental.carrentalsystem.controller.DriverServlet;
+import com.carrental.carrentalsystem.dao.DriverDAO;
 import com.carrental.carrentalsystem.model.Car;
+import com.carrental.carrentalsystem.model.Driver;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +22,10 @@ import org.mockito.MockitoAnnotations;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -29,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-public class CarServletTest {
+public class DriverServletTest {
     @Mock
     private HttpServletRequest request;
 
@@ -37,21 +43,20 @@ public class CarServletTest {
     private HttpServletResponse response;
 
     @Mock
-    private CarDAO carDAO;
+    private DriverDAO driverDAO;
 
-    private CarServlet carServlet;
+    private DriverServlet driverServlet;
     private Gson gson;
-
 
     @BeforeEach
     void setUp() throws Exception {
         MockitoAnnotations.openMocks(this);
-        carServlet = new CarServlet();
+        driverServlet = new DriverServlet();
 
-        // Inject the mocked CarDAO using reflection
-        Field carDAOField = CarServlet.class.getDeclaredField("carDAO");
-        carDAOField.setAccessible(true);
-        carDAOField.set(carServlet, carDAO);
+        // Inject the mocked DriverDAO using reflection
+        Field driverDAOField = DriverServlet.class.getDeclaredField("driverDAO");
+        driverDAOField.setAccessible(true);
+        driverDAOField.set(driverServlet, driverDAO);
 
         gson = new Gson();
     }
@@ -59,24 +64,24 @@ public class CarServletTest {
     @Test
     void testDoPost() throws Exception {
         // Mock request parameters
-        when(request.getParameter("carId")).thenReturn("CAR-001");
-        when(request.getParameter("brand")).thenReturn("Toyota");
-        when(request.getParameter("model")).thenReturn("Corolla");
-        when(request.getParameter("year")).thenReturn("2023");
-        when(request.getParameter("price")).thenReturn("100.0");
+        when(request.getParameter("driverId")).thenReturn("DID-001");
+        when(request.getParameter("driverName")).thenReturn("Test Driver");
+        when(request.getParameter("driverAddress")).thenReturn("colombo");
+        when(request.getParameter("driverAge")).thenReturn("20");
+        when(request.getParameter("driverNationalId")).thenReturn("199876463734");
 
         // Mock response writer
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(printWriter);
 
-        // Mock CarDAO behavior
-        when(carDAO.addCar(any(Car.class))).thenReturn(true);
+        // Mock DrierDAO behavior
+        when(driverDAO.addDriver(any(Driver.class))).thenReturn(true);
 
         // Use reflection to invoke protected doPost method
-        Method doPostMethod = CarServlet.class.getDeclaredMethod("doPost", HttpServletRequest.class, HttpServletResponse.class);
+        Method doPostMethod = DriverServlet.class.getDeclaredMethod("doPost", HttpServletRequest.class, HttpServletResponse.class);
         doPostMethod.setAccessible(true); // Allow access to the protected method
-        doPostMethod.invoke(carServlet, request, response); // Invoke the method
+        doPostMethod.invoke(driverServlet, request, response); // Invoke the method
 
         // Verify the response
         printWriter.flush();
@@ -85,11 +90,11 @@ public class CarServletTest {
 
     @Test
     void testDoGet() throws Exception {
-        // Mock CarDAO behavior
-        List<Car> cars = new ArrayList<>();
-        cars.add(new Car("CAR001", "Toyota", "Corolla", 2023, 100.0, true));
-        when(carDAO.getAllCars()).thenReturn(cars);
-        when(carDAO.getCarCount()).thenReturn(1);
+        // Mock DriverDAO behavior
+        List<Driver> drivers = new ArrayList<>();
+        drivers.add(new Driver("DID-001", "Test Driver", "colombo", 20, "199876463734", true));
+        when(driverDAO.getAllDrivers()).thenReturn(drivers);
+        when(driverDAO.getDriverCount()).thenReturn(1);
 
         // Mock response writer
         StringWriter stringWriter = new StringWriter();
@@ -97,54 +102,52 @@ public class CarServletTest {
         when(response.getWriter()).thenReturn(printWriter);
 
         // Use reflection to invoke the protected doGet method
-        Method doGetMethod = CarServlet.class.getDeclaredMethod("doGet", HttpServletRequest.class, HttpServletResponse.class);
+        Method doGetMethod = DriverServlet.class.getDeclaredMethod("doGet", HttpServletRequest.class, HttpServletResponse.class);
         doGetMethod.setAccessible(true); // Allow access to the protected method
-        doGetMethod.invoke(carServlet, request, response); // Invoke the method
+        doGetMethod.invoke(driverServlet, request, response); // Invoke the method
 
         // Verify the response
         printWriter.flush();
-        String expectedJson = gson.toJson(cars);
+        String expectedJson = gson.toJson(drivers);
         assertEquals(expectedJson, stringWriter.toString());
     }
-
 
     @Test
     void testDoDelete() throws Exception {
         // Mock request parameter
-        when(request.getParameter("id")).thenReturn("CAR001");
+        when(request.getParameter("id")).thenReturn("DID-001");
 
         // Mock response writer
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(printWriter);
 
-        // Mock CarDAO behavior
-        when(carDAO.deleteCar("CAR001")).thenReturn(true);
+        // Mock DriverDAO behavior
+        when(driverDAO.deleteDriver("DID-001")).thenReturn(true);
 
         try {
             // Use reflection to invoke the protected doDelete method
-            Method doDeleteMethod = CarServlet.class.getDeclaredMethod("doDelete", HttpServletRequest.class, HttpServletResponse.class);
+            Method doDeleteMethod = DriverServlet.class.getDeclaredMethod("doDelete", HttpServletRequest.class, HttpServletResponse.class);
             doDeleteMethod.setAccessible(true); // Allow access to the protected method
-            doDeleteMethod.invoke(carServlet, request, response); // Invoke the method
+            doDeleteMethod.invoke(driverServlet, request, response); // Invoke the method
 
             // Verify the response
             printWriter.flush();
             JsonObject jsonResponse = new JsonObject();
-            jsonResponse.addProperty("message", "Car deleted successfully");
+            jsonResponse.addProperty("message", "Driver deleted successfully");
             assertEquals(gson.toJson(jsonResponse), stringWriter.toString());
 
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-            throw new AssertionError("Method doDelete not found in CarServlet. Check if it's declared correctly.", e);
+            throw new AssertionError("Method doDelete not found in DriverServlet. Check if it's declared correctly.", e);
         }
     }
-
 
     @Test
     void testDoPut() throws Exception {
         // Mock request body
-        Car car = new Car("CAR001", "Toyota", "Corolla", 2023, 100.0, true);
-        String jsonBody = gson.toJson(car);
+        Driver driver = new Driver("DID-001", "Test Driver", "colombo", 20, "19944543463734", true);
+        String jsonBody = gson.toJson(driver);
         BufferedReader reader = new BufferedReader(new StringReader(jsonBody));
         when(request.getReader()).thenReturn(reader);
 
@@ -153,20 +156,19 @@ public class CarServletTest {
         PrintWriter printWriter = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(printWriter);
 
-        // Mock CarDAO behavior
-        when(carDAO.updateCar(car)).thenReturn(true);
+        // Mock DriverDAO behavior
+        when(driverDAO.updateDriver(driver)).thenReturn(true);
 
         // Use reflection to invoke doPut
-        Method doPutMethod = CarServlet.class.getDeclaredMethod("doPut", HttpServletRequest.class, HttpServletResponse.class);
+        Method doPutMethod = DriverServlet.class.getDeclaredMethod("doPut", HttpServletRequest.class, HttpServletResponse.class);
         doPutMethod.setAccessible(true);
-        doPutMethod.invoke(carServlet, request, response);
+        doPutMethod.invoke(driverServlet, request, response);
 
         // Verify the response
         printWriter.flush();
         JsonObject jsonResponse = new JsonObject();
-        jsonResponse.addProperty("message", "Car updated successfully");
+        jsonResponse.addProperty("message", "Driver updated successfully");
     }
-
 
     @Test
     void testDoDeleteWithMissingId() throws Exception {
@@ -179,23 +181,22 @@ public class CarServletTest {
         when(response.getWriter()).thenReturn(printWriter);
 
         // Use reflection to invoke doDelete
-        Method doDeleteMethod = CarServlet.class.getDeclaredMethod("doDelete", HttpServletRequest.class, HttpServletResponse.class);
+        Method doDeleteMethod = DriverServlet.class.getDeclaredMethod("doDelete", HttpServletRequest.class, HttpServletResponse.class);
         doDeleteMethod.setAccessible(true);
-        doDeleteMethod.invoke(carServlet, request, response);
+        doDeleteMethod.invoke(driverServlet, request, response);
 
         // Verify the response
         printWriter.flush();
         JsonObject jsonResponse = new JsonObject();
-        jsonResponse.addProperty("message", "Car ID is required");
+        jsonResponse.addProperty("message", "Driver ID is required");
         assertEquals(gson.toJson(jsonResponse), stringWriter.toString());
     }
-
 
     @Test
     void testDoPutWithMissingId() throws Exception {
         // Mock request body (missing carId)
-        Car car = new Car(null, "Toyota", "Corolla", 2023, 100.0, true);
-        String jsonBody = gson.toJson(car);
+        Driver driver = new Driver(null, "test", "colombo", 20, "1993758474857", true);
+        String jsonBody = gson.toJson(driver);
         BufferedReader reader = new BufferedReader(new StringReader(jsonBody));
         when(request.getReader()).thenReturn(reader);
 
@@ -205,17 +206,15 @@ public class CarServletTest {
         when(response.getWriter()).thenReturn(printWriter);
 
         // Use reflection to invoke doPut
-        Method doPutMethod = CarServlet.class.getDeclaredMethod("doPut", HttpServletRequest.class, HttpServletResponse.class);
+        Method doPutMethod = DriverServlet.class.getDeclaredMethod("doPut", HttpServletRequest.class, HttpServletResponse.class);
         doPutMethod.setAccessible(true);
-        doPutMethod.invoke(carServlet, request, response);
+        doPutMethod.invoke(driverServlet, request, response);
 
         // Verify the response
         printWriter.flush();
         JsonObject jsonResponse = new JsonObject();
-        jsonResponse.addProperty("message", "Car ID is required");
+        jsonResponse.addProperty("message", "Driver ID is required");
         assertEquals(gson.toJson(jsonResponse), stringWriter.toString());
     }
-
-
 
 }

@@ -29,7 +29,7 @@ public class DriverDAO {
     }
 
     // Add a new driver to the database
-    public static boolean addDriver(Driver driver) {
+    public boolean addDriver(Driver driver) {
         String query = "INSERT INTO Driver (driverId, driverName, driverAddress, driverAge, driverNationalId, isDriverAvailable) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
@@ -122,7 +122,7 @@ public class DriverDAO {
     }
 
     // update Driver
-    public static boolean updateDriver(Driver driver) {
+    public boolean updateDriver(Driver driver) {
         String query = "UPDATE Driver SET driverName = ?, driverAddress = ?, driverAge = ?, driverNationalId = ? WHERE driverId = ?";
 
         try {

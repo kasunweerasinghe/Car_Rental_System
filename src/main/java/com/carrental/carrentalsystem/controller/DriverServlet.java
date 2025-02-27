@@ -35,7 +35,8 @@ public class DriverServlet extends HttpServlet {
             String nationalId = request.getParameter("driverNationalId");
 
             Driver driver = new Driver(driverId, name, address, age, nationalId, true);
-            boolean isAdded = DriverDAO.addDriver(driver);
+            boolean isAdded = driverDAO.addDriver(driver);
+
 
             if (isAdded) {
                 response.getWriter().write("success");
@@ -116,7 +117,7 @@ public class DriverServlet extends HttpServlet {
             return;
         }
 
-        boolean isUpdated = DriverDAO.updateDriver(driver);
+        boolean isUpdated = driverDAO.updateDriver(driver);
 
         if (isUpdated) {
             jsonResponse.addProperty("message", "Driver updated successfully");

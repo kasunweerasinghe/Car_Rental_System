@@ -58,7 +58,7 @@ public class DriverDAOTest {
 
     public static Driver saveDummyDriver() {
         Driver driver = new Driver("DID-078", "Mihithilina", "Godagama", 10, "200067656734", true);
-        DriverDAO.addDriver(driver);
+        driverDAO.addDriver(driver);
         return driver;
     }
 
@@ -74,7 +74,7 @@ public class DriverDAOTest {
     @DisplayName("Save Driver test")
     public void testAddDriver() {
         Driver driver = new Driver("DID-068", "Gayan", "Colombo", 19, "19992265425", true);
-        assertTrue(DriverDAO.addDriver(driver));
+        assertTrue(driverDAO.addDriver(driver));
     }
 
     @Test
