@@ -119,7 +119,7 @@ public class CarDAO {
     }
 
     // update car
-    public static boolean updateCar(Car car) {
+    public boolean updateCar(Car car) {
         String query = "UPDATE Car SET brand = ?, model = ?, year = ?, price = ? WHERE carId = ?";
 
         try {
