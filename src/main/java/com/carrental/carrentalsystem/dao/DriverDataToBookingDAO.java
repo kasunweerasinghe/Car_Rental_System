@@ -21,17 +21,22 @@ public class DriverDataToBookingDAO {
     public List<Driver> getAvailableDrivers() {
         List<Driver> drivers = new ArrayList<>();
         String query = "SELECT driverId, driverName, driverAge, isDriverAvailable FROM Driver WHERE isDriverAvailable = 1";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
 
-            while (rs.next()) {
-                Driver driver = new Driver();
-                driver.setDriverId(rs.getString("driverId"));
-                driver.setDriverName(rs.getString("driverName"));
-                driver.setDriverAge(rs.getInt("driverAge"));
-                driver.setDriverAvailable(rs.getBoolean("isDriverAvailable"));
-                drivers.add(driver);
+        try {
+            DatabaseConnection dbConnection = DatabaseConnection.getInstance();
+            Connection connection = dbConnection.getConnection();
+
+            try (PreparedStatement stmt = connection.prepareStatement(query);
+                 ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+                    Driver driver = new Driver();
+                    driver.setDriverId(rs.getString("driverId"));
+                    driver.setDriverName(rs.getString("driverName"));
+                    driver.setDriverAge(rs.getInt("driverAge"));
+                    driver.setDriverAvailable(rs.getBoolean("isDriverAvailable"));
+                    drivers.add(driver);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

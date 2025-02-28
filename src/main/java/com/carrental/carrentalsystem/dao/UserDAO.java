@@ -20,19 +20,23 @@ public class UserDAO {
     public boolean insertUser(User user) {
         String query = "INSERT INTO User (username, password, email, role) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+        try {
+            DatabaseConnection dbConnection = DatabaseConnection.getInstance();
+            Connection connection = dbConnection.getConnection();
 
-            stmt.setString(1, user.getUsername());
-            stmt.setString(2, user.getPassword());
-            stmt.setString(3, user.getEmail());
-            stmt.setString(4, user.getRole());
+            try (PreparedStatement stmt = connection.prepareStatement(query)) {
 
-            int rowsInserted = stmt.executeUpdate();
-            return rowsInserted > 0;
+                stmt.setString(1, user.getUsername());
+                stmt.setString(2, user.getPassword());
+                stmt.setString(3, user.getEmail());
+                stmt.setString(4, user.getRole());
 
+                int rowsInserted = stmt.executeUpdate();
+                return rowsInserted > 0;
+
+            }
         } catch (SQLException e) {
-            e.printStackTrace(); // Log error
+            e.printStackTrace();
             return false;
         }
     }
@@ -41,24 +45,28 @@ public class UserDAO {
     public User getUserByUsernameAndPassword(String username, String password) {
         String query = "SELECT * FROM User WHERE username = ? AND password = ?";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+        try{
+            DatabaseConnection dbConnection = DatabaseConnection.getInstance();
+            Connection connection = dbConnection.getConnection();
 
-            stmt.setString(1, username);
-            stmt.setString(2, password);
+            try (PreparedStatement stmt = connection.prepareStatement(query)) {
 
-            ResultSet rs = stmt.executeQuery();
+                stmt.setString(1, username);
+                stmt.setString(2, password);
 
-            if (rs.next()) {
-                return new User(
-                        rs.getInt("userId"),
-                        rs.getString("username"),
-                        rs.getString("password"),
-                        rs.getString("email"),
-                        rs.getString("role")
-                );
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    return new User(
+                            rs.getInt("userId"),
+                            rs.getString("username"),
+                            rs.getString("password"),
+                            rs.getString("email"),
+                            rs.getString("role")
+                    );
+                }
+
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
