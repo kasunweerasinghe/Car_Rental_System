@@ -9,6 +9,7 @@ package com.carrental.carrentalsystem.controller;
 
 import com.carrental.carrentalsystem.dao.CarDAO;
 import com.carrental.carrentalsystem.model.Car;
+import com.carrental.carrentalsystem.service.CarService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -24,7 +25,7 @@ import java.io.PrintWriter;
 
 @WebServlet("/car")
 public class CarServlet extends HttpServlet {
-    private CarDAO carDAO = new CarDAO();
+    private CarService carService = new CarService();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -36,7 +37,7 @@ public class CarServlet extends HttpServlet {
             double price = Double.parseDouble(request.getParameter("price"));
 
             Car car = new Car(carId, brand, model, year, price, true);
-            boolean isAdded = carDAO.addCar(car);
+            boolean isAdded = carService.addCar(car);
 
             if (isAdded) {
                 response.getWriter().write("success");
@@ -53,9 +54,9 @@ public class CarServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(new Gson().toJson(carDAO.getAllCars()));
+        response.getWriter().write(new Gson().toJson(carService.getAllCars()));
 
-        int carCount = carDAO.getCarCount();
+        int carCount = carService.getCarCount();
         JsonObject jsonResponse = new JsonObject();
         jsonResponse.addProperty("carCount", carCount);
 
@@ -77,7 +78,7 @@ public class CarServlet extends HttpServlet {
             return;
         }
 
-        boolean isDeleted = carDAO.deleteCar(idParam);
+        boolean isDeleted = carService.deleteCar(idParam);
 
         if (isDeleted) {
             jsonResponse.addProperty("message", "Car deleted successfully");
@@ -120,7 +121,7 @@ public class CarServlet extends HttpServlet {
             return;
         }
 
-        boolean isUpdated = carDAO.updateCar(car);
+        boolean isUpdated = carService.updateCar(car);
 
         if (isUpdated) {
             jsonResponse.addProperty("message", "Car updated successfully");
