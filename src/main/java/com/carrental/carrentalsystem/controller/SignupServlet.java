@@ -19,6 +19,7 @@ import java.io.IOException;
 public class SignupServlet extends HttpServlet {
     private UserService userService = new UserService();
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
@@ -31,7 +32,7 @@ public class SignupServlet extends HttpServlet {
         if (isRegistered) {
             response.sendRedirect("index.html");
         } else {
-            response.getWriter().write("error"); // Notify frontend for failure
+            response.getWriter().write("error");
         }
     }
 }
