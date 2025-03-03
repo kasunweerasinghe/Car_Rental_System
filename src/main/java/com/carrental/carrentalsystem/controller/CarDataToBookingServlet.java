@@ -1,6 +1,7 @@
 package com.carrental.carrentalsystem.controller;
 
 import com.carrental.carrentalsystem.dao.CarDataToBookingDAO;
+import com.carrental.carrentalsystem.service.CarDataToBookingService;
 import com.google.gson.Gson;
 
 import javax.servlet.ServletException;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 @WebServlet("/carBookingData")
 public class CarDataToBookingServlet extends HttpServlet {
-    CarDataToBookingDAO carDataToBookingDAO = new CarDataToBookingDAO();
+    private CarDataToBookingService carDataToBookingService = new CarDataToBookingService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -26,13 +27,13 @@ public class CarDataToBookingServlet extends HttpServlet {
 
         if ("models".equals(action)) {
             String brand = request.getParameter("brand");
-            List<String> models = carDataToBookingDAO.getCarModelsByBrand(brand);
+            List<String> models = carDataToBookingService.getCarModelsByBrand(brand);
             String json = new Gson().toJson(models);
             response.getWriter().write(json);
         } else if ("price".equals(action)) {
             String brand = request.getParameter("brand");
             String model = request.getParameter("model");
-            int price = carDataToBookingDAO.getCarPrice(brand, model);
+            int price = carDataToBookingService.getCarPrice(brand, model);
 
             // Creating a HashMap to return price in JSON format
             Map<String, Integer> priceMap = new HashMap<>();
@@ -41,8 +42,7 @@ public class CarDataToBookingServlet extends HttpServlet {
             String json = new Gson().toJson(priceMap);
             response.getWriter().write(json);
         } else {
-            // Default: Load brands
-            List<String> brands = carDataToBookingDAO.getCarBrands();
+            List<String> brands = carDataToBookingService.getCarBrands();
             String json = new Gson().toJson(brands);
             response.getWriter().write(json);
         }
