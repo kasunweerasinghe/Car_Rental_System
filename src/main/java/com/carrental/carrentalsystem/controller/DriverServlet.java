@@ -9,6 +9,7 @@ package com.carrental.carrentalsystem.controller;
 
 import com.carrental.carrentalsystem.dao.DriverDAO;
 import com.carrental.carrentalsystem.model.Driver;
+import com.carrental.carrentalsystem.service.DriverService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -20,10 +21,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 @WebServlet("/driver")
 public class DriverServlet extends HttpServlet {
     private DriverDAO driverDAO = new DriverDAO();
+    private DriverService driverService = new DriverService();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -35,7 +38,7 @@ public class DriverServlet extends HttpServlet {
             String nationalId = request.getParameter("driverNationalId");
 
             Driver driver = new Driver(driverId, name, address, age, nationalId, true);
-            boolean isAdded = driverDAO.addDriver(driver);
+            boolean isAdded = driverService.addDriver(driver);
 
 
             if (isAdded) {
@@ -51,12 +54,25 @@ public class DriverServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        int driverCount = driverDAO.getDriverCount();
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+//        int driverCount = driverDAO.getDriverCount();
+//        JsonObject jsonResponse = new JsonObject();
+//        response.getWriter().write(new Gson().toJson(driverDAO.getAllDrivers()));
+//        jsonResponse.addProperty("driverCount", driverCount);
+//
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+
+        // Get all drivers
+        List<Driver> drivers = driverService.getAllDrivers();
+        response.getWriter().write(new Gson().toJson(drivers));
+
+        // Get driver count
+        int driverCount = driverService.getDriverCount();
         JsonObject jsonResponse = new JsonObject();
-        response.getWriter().write(new Gson().toJson(driverDAO.getAllDrivers()));
         jsonResponse.addProperty("driverCount", driverCount);
+        response.getWriter().write(jsonResponse.toString());
     }
 
     @Override
@@ -75,7 +91,7 @@ public class DriverServlet extends HttpServlet {
             return;
         }
 
-        boolean isDeleted = driverDAO.deleteDriver(idParam);
+        boolean isDeleted = driverService.deleteDriver(idParam);
 
         if (isDeleted) {
             jsonResponse.addProperty("message", "Driver deleted successfully");
@@ -117,7 +133,7 @@ public class DriverServlet extends HttpServlet {
             return;
         }
 
-        boolean isUpdated = driverDAO.updateDriver(driver);
+        boolean isUpdated = driverService.updateDriver(driver);
 
         if (isUpdated) {
             jsonResponse.addProperty("message", "Driver updated successfully");

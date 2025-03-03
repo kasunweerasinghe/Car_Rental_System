@@ -20,7 +20,6 @@ import java.util.List;
 public class BookingDAO {
 
     // Add a new booking to the database
-    // Add a new booking to the database
     public boolean placeBooking(Booking booking) {
         String query = "INSERT INTO Booking (bookId, customerName, date, carBrand, carModel, price, pickupLocation, dropLocation, tripStartDate, tripEndDate, totalPrice, driverName, driverId, driverAge) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 

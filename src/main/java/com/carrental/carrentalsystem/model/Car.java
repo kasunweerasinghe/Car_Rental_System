@@ -15,7 +15,8 @@ public class Car {
     private double price;
     private boolean isAvailable;
 
-    public Car() {}
+    public Car() {
+    }
 
     public Car(String carId, String brand, String model, int year, double price, boolean isAvailable) {
         this.carId = carId;
