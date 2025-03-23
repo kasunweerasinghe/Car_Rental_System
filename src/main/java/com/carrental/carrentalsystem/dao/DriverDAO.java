@@ -20,10 +20,10 @@ import java.util.List;
 
 public class DriverDAO {
 
-    private Connection connection; // Connection will be injected
+    private Connection connection;
 
     public DriverDAO() {}
-    // Constructor to accept a Connection object
+
     public DriverDAO(Connection connection) {
         this.connection = connection;
     }
@@ -55,20 +55,26 @@ public class DriverDAO {
     public Driver getDriver(String driverId) {
         String query = "SELECT * FROM Driver WHERE driverId = ?";
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, driverId);
-            ResultSet resultSet = preparedStatement.executeQuery();
+        try {
+            DatabaseConnection dbConnection = DatabaseConnection.getInstance();
+            Connection connection = dbConnection.getConnection();
 
-            if (resultSet.next()) {
-                return new Driver(
-                        resultSet.getString("driverId"),
-                        resultSet.getString("driverName"),
-                        resultSet.getString("driverAddress"),
-                        resultSet.getInt("driverAge"),
-                        resultSet.getString("driverNationalId"),
-                        resultSet.getBoolean("isDriverAvailable")
-                );
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setString(1, driverId);
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) {
+                    return new Driver(
+                            resultSet.getString("driverId"),
+                            resultSet.getString("driverName"),
+                            resultSet.getString("driverAddress"),
+                            resultSet.getInt("driverAge"),
+                            resultSet.getString("driverNationalId"),
+                            resultSet.getBoolean("isDriverAvailable")
+                    );
+                }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

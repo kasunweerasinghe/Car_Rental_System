@@ -25,7 +25,6 @@ import java.util.List;
 
 @WebServlet("/driver")
 public class DriverServlet extends HttpServlet {
-    private DriverDAO driverDAO = new DriverDAO();
     private DriverService driverService = new DriverService();
 
     @Override
@@ -54,25 +53,25 @@ public class DriverServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        response.setContentType("application/json");
-//        response.setCharacterEncoding("UTF-8");
-//        int driverCount = driverDAO.getDriverCount();
-//        JsonObject jsonResponse = new JsonObject();
-//        response.getWriter().write(new Gson().toJson(driverDAO.getAllDrivers()));
-//        jsonResponse.addProperty("driverCount", driverCount);
-//
-//        response.setContentType("application/json");
-//        response.setCharacterEncoding("UTF-8");
-
-        // Get all drivers
-        List<Driver> drivers = driverService.getAllDrivers();
-        response.getWriter().write(new Gson().toJson(drivers));
-
-        // Get driver count
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         int driverCount = driverService.getDriverCount();
         JsonObject jsonResponse = new JsonObject();
+        response.getWriter().write(new Gson().toJson(driverService.getAllDrivers()));
         jsonResponse.addProperty("driverCount", driverCount);
-        response.getWriter().write(jsonResponse.toString());
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+//        // Get all drivers
+//        List<Driver> drivers = driverService.getAllDrivers();
+//        response.getWriter().write(new Gson().toJson(drivers));
+//
+//        // Get driver count
+//        int driverCount = driverService.getDriverCount();
+//        JsonObject jsonResponse = new JsonObject();
+//        jsonResponse.addProperty("driverCount", driverCount);
+//        response.getWriter().write(jsonResponse.toString());
     }
 
     @Override

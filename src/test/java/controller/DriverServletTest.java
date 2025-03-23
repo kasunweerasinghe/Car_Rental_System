@@ -8,11 +8,10 @@
 package controller;
 
 
-import com.carrental.carrentalsystem.controller.CarServlet;
 import com.carrental.carrentalsystem.controller.DriverServlet;
-import com.carrental.carrentalsystem.dao.DriverDAO;
-import com.carrental.carrentalsystem.model.Car;
 import com.carrental.carrentalsystem.model.Driver;
+import com.carrental.carrentalsystem.service.CarService;
+import com.carrental.carrentalsystem.service.DriverService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +42,7 @@ public class DriverServletTest {
     private HttpServletResponse response;
 
     @Mock
-    private DriverDAO driverDAO;
+    private DriverService driverService;
 
     private DriverServlet driverServlet;
     private Gson gson;
@@ -56,7 +55,7 @@ public class DriverServletTest {
         // Inject the mocked DriverDAO using reflection
         Field driverDAOField = DriverServlet.class.getDeclaredField("driverDAO");
         driverDAOField.setAccessible(true);
-        driverDAOField.set(driverServlet, driverDAO);
+        driverDAOField.set(driverServlet, driverService);
 
         gson = new Gson();
     }
@@ -76,7 +75,7 @@ public class DriverServletTest {
         when(response.getWriter()).thenReturn(printWriter);
 
         // Mock DrierDAO behavior
-        when(driverDAO.addDriver(any(Driver.class))).thenReturn(true);
+        when(driverService.addDriver(any(Driver.class))).thenReturn(true);
 
         // Use reflection to invoke protected doPost method
         Method doPostMethod = DriverServlet.class.getDeclaredMethod("doPost", HttpServletRequest.class, HttpServletResponse.class);
@@ -93,8 +92,8 @@ public class DriverServletTest {
         // Mock DriverDAO behavior
         List<Driver> drivers = new ArrayList<>();
         drivers.add(new Driver("DID-001", "Test Driver", "colombo", 20, "199876463734", true));
-        when(driverDAO.getAllDrivers()).thenReturn(drivers);
-        when(driverDAO.getDriverCount()).thenReturn(1);
+        when(driverService.getAllDrivers()).thenReturn(drivers);
+        when(driverService.getDriverCount()).thenReturn(1);
 
         // Mock response writer
         StringWriter stringWriter = new StringWriter();
@@ -123,7 +122,7 @@ public class DriverServletTest {
         when(response.getWriter()).thenReturn(printWriter);
 
         // Mock DriverDAO behavior
-        when(driverDAO.deleteDriver("DID-001")).thenReturn(true);
+        when(driverService.deleteDriver("DID-001")).thenReturn(true);
 
         try {
             // Use reflection to invoke the protected doDelete method
@@ -157,7 +156,7 @@ public class DriverServletTest {
         when(response.getWriter()).thenReturn(printWriter);
 
         // Mock DriverDAO behavior
-        when(driverDAO.updateDriver(driver)).thenReturn(true);
+        when(driverService.updateDriver(driver)).thenReturn(true);
 
         // Use reflection to invoke doPut
         Method doPutMethod = DriverServlet.class.getDeclaredMethod("doPut", HttpServletRequest.class, HttpServletResponse.class);

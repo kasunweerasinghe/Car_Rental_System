@@ -8,8 +8,8 @@
 package controller;
 
 import com.carrental.carrentalsystem.controller.CarServlet;
-import com.carrental.carrentalsystem.dao.CarDAO;
 import com.carrental.carrentalsystem.model.Car;
+import com.carrental.carrentalsystem.service.CarService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +37,7 @@ public class CarServletTest {
     private HttpServletResponse response;
 
     @Mock
-    private CarDAO carDAO;
+    private CarService carService;
 
     private CarServlet carServlet;
     private Gson gson;
@@ -48,10 +48,10 @@ public class CarServletTest {
         MockitoAnnotations.openMocks(this);
         carServlet = new CarServlet();
 
-        // Inject the mocked CarDAO using reflection
-        Field carDAOField = CarServlet.class.getDeclaredField("carDAO");
-        carDAOField.setAccessible(true);
-        carDAOField.set(carServlet, carDAO);
+        /// Inject the mocked CarService using reflection
+        Field carServiceField = CarServlet.class.getDeclaredField("carService");
+        carServiceField.setAccessible(true);
+        carServiceField.set(carServlet, carService);
 
         gson = new Gson();
     }
@@ -70,8 +70,8 @@ public class CarServletTest {
         PrintWriter printWriter = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(printWriter);
 
-        // Mock CarDAO behavior
-        when(carDAO.addCar(any(Car.class))).thenReturn(true);
+        // Mock CarService behavior
+        when(carService.addCar(any(Car.class))).thenReturn(true);
 
         // Use reflection to invoke protected doPost method
         Method doPostMethod = CarServlet.class.getDeclaredMethod("doPost", HttpServletRequest.class, HttpServletResponse.class);
@@ -85,11 +85,11 @@ public class CarServletTest {
 
     @Test
     void testDoGet() throws Exception {
-        // Mock CarDAO behavior
+        // Mock CarService behavior
         List<Car> cars = new ArrayList<>();
         cars.add(new Car("CAR001", "Toyota", "Corolla", 2023, 100.0, true));
-        when(carDAO.getAllCars()).thenReturn(cars);
-        when(carDAO.getCarCount()).thenReturn(1);
+        when(carService.getAllCars()).thenReturn(cars);
+        when(carService.getCarCount()).thenReturn(1);
 
         // Mock response writer
         StringWriter stringWriter = new StringWriter();
@@ -118,8 +118,8 @@ public class CarServletTest {
         PrintWriter printWriter = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(printWriter);
 
-        // Mock CarDAO behavior
-        when(carDAO.deleteCar("CAR001")).thenReturn(true);
+        // Mock CarService behavior
+        when(carService.deleteCar("CAR001")).thenReturn(true);
 
         try {
             // Use reflection to invoke the protected doDelete method
@@ -153,8 +153,8 @@ public class CarServletTest {
         PrintWriter printWriter = new PrintWriter(stringWriter);
         when(response.getWriter()).thenReturn(printWriter);
 
-        // Mock CarDAO behavior
-        when(carDAO.updateCar(car)).thenReturn(true);
+        // Mock CarService behavior
+        when(carService.updateCar(car)).thenReturn(true);
 
         // Use reflection to invoke doPut
         Method doPutMethod = CarServlet.class.getDeclaredMethod("doPut", HttpServletRequest.class, HttpServletResponse.class);
