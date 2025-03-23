@@ -7,7 +7,6 @@
 
 package controller;
 
-import com.carrental.carrentalsystem.controller.DriverServlet;
 import com.carrental.carrentalsystem.controller.LoginServlet;
 import com.carrental.carrentalsystem.model.User;
 import com.carrental.carrentalsystem.service.UserService;

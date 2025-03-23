@@ -36,7 +36,7 @@ public class CarDAOTest {
     private static void createTables() throws SQLException {
         String createTableSQL = "CREATE TABLE Car (" +
                 "carId VARCHAR(25) PRIMARY KEY, " +
-                "brand VARCHAR(5), " +
+                "brand VARCHAR(25), " +
                 "model VARCHAR(25), " +
                 "year INT, " +
                 "price DOUBLE, " +
